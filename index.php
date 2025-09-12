@@ -12,7 +12,7 @@
   <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
     <!-- Logo izquierda -->
     <div class="logo">
-      <img src="logo.png" alt="Logo" class="h-10">
+      <img src="img/labu.png" alt="Logo" class="h-10">
     </div>
 
     <!-- Iconos derecha -->
@@ -32,17 +32,12 @@
       </a>
 
       <!-- Mensajes -->
-      <a href="#mensajes" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" title="Mensajes">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 10h.01M12 10h.01M16 
-               10h.01M21 12c0 4.418-4.03 8-9 
-               8a9.77 9.77 0 01-4.255-.938L3 
-               20l1.938-4.255A9.77 9.77 0 
-               015 12c0-4.418 4.03-8 9-8s9 
-               3.582 9 8z" />
-        </svg>
-      </a>
+     <a href="#mensajes" 
+   class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" 
+   title="Mensajes">
+  <img src="img/chat.png" alt="Mensajes" class="w-6 h-6 object-contain">
+</a>
+
     </div>
   </header>
 
@@ -133,23 +128,23 @@
 </section>
 
 <!-- Barra inferior fija -->
-<nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center py-2 shadow-md z-50">
+<nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center py-1.5 shadow-md z-50">
   
   <!-- Botón Inicio -->
   <a href="#inicio" class="flex flex-col items-center justify-center text-gray-700 hover:text-blue-600 w-1/3">
     <!-- Icono Home -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
     </svg>
-    <span class="text-sm font-medium">Inicio</span>
+    <span class="text-xs font-medium">Inicio</span>
   </a>
 
   <!-- Botón central grande -->
   <a href="#trabajador" 
-     class="relative -mt-8 w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg hover:brightness-110 transition">
+     class="relative -mt-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg hover:brightness-110 transition">
     <!-- Icono trabajador -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
            1.79-4 4 1.79 4 4 4zm0 2c-3.31 
@@ -160,13 +155,13 @@
   <!-- Botón Cuenta -->
   <a href="#cuenta" class="flex flex-col items-center justify-center text-gray-700 hover:text-blue-600 w-1/3">
     <!-- Icono usuario -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M5.121 17.804A9 9 0 1112 21a9 
            9 0 01-6.879-3.196zM15 11a3 3 0 
            11-6 0 3 3 0 016 0z" />
     </svg>
-    <span class="text-sm font-medium">Cuenta</span>
+    <span class="text-xs font-medium">Cuenta</span>
   </a>
 </nav>
 
