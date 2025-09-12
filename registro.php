@@ -141,7 +141,7 @@
 
             if (provinciaId) {
                 try {
-                    const response = await fetch(`get_localidades.php?id_provincia=${provinciaId}`);
+                    const response = await fetch(`Modelos/get_localidades.php?id_provincia=${provinciaId}`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
