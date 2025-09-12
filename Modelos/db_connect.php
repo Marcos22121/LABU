@@ -15,4 +15,7 @@ if ($conn->connect_error) {
 
 // Establecer el juego de caracteres a utf8mb4
 $conn->set_charset("utf8mb4");
+
+// Esta función es opcional, pero útil para encriptar contraseñas
+
 ?>
