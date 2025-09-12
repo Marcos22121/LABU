@@ -7,7 +7,7 @@
   <!-- Importar Tailwind CSS vía CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white font-sans">
+<body class="bg-gray-50 pb-20">
 
   <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
     <!-- Logo izquierda -->
@@ -121,9 +121,21 @@
     </a>
 
     <!-- Ver todos -->
-    <a href="#todos" class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md bg-blue-600 hover:bg-blue-700 transition">
-      <span class="text-white text-lg font-semibold">Ver todos</span>
-    </a>
+   <a href="#todos" 
+   class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
+
+  <!-- Imagen de fondo -->
+  <img src="img/trabajo.webp" 
+       alt="Trabajos" 
+       class="absolute inset-0 w-full h-full object-cover">
+
+  <!-- Overlay azul -->
+  <div class="absolute inset-0 bg-blue-600 bg-opacity-30"></div>
+
+  <!-- Texto -->
+  <span class="relative z-10 text-white text-lg font-semibold">Ver todos</span>
+</a>
+
   </div>
 </section>
 
