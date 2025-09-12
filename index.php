@@ -127,6 +127,117 @@
   </div>
 </section>
 
+<section class="px-4 py-8 bg-gray-50">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Trabajadores Destacados</h2>
+
+  <!-- Trabajador 1 -->
+  <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 mb-4">
+    <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+         alt="Foto trabajador" 
+         class="w-16 h-16 rounded-full object-cover">
+    <div class="flex-1">
+      <h3 class="text-lg font-semibold text-gray-800">Carlos Ramírez</h3>
+      <div class="flex flex-wrap gap-2 my-1">
+        <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Electricista</span>
+        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Plomero</span>
+        <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Mantenimiento</span>
+      </div>
+      <div class="flex items-center my-2">
+        <!-- 4 llenas, 1 vacía -->
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <span class="ml-2 text-sm text-gray-600">4.0</span>
+      </div>
+      <p class="text-sm text-gray-600 leading-snug">
+        Profesional con más de 8 años de experiencia en instalaciones eléctricas y plomería. Responsable, puntual y orientado a resolver problemas de forma eficiente.
+      </p>
+    </div>
+  </div>
+
+  <!-- Trabajador 2 -->
+  <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 mb-4">
+    <img src="https://randomuser.me/api/portraits/women/44.jpg" 
+         alt="Foto trabajadora" 
+         class="w-16 h-16 rounded-full object-cover">
+    <div class="flex-1">
+      <h3 class="text-lg font-semibold text-gray-800">Mariana López</h3>
+      <div class="flex flex-wrap gap-2 my-1">
+        <span class="px-2 py-1 text-xs bg-pink-100 text-pink-700 rounded-full">Diseñadora</span>
+        <span class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">Ilustradora</span>
+      </div>
+      <div class="flex items-center my-2">
+        <!-- 5 llenas -->
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <span class="ml-2 text-sm text-gray-600">5.0</span>
+      </div>
+      <p class="text-sm text-gray-600 leading-snug">
+        Especialista en diseño gráfico y branding con 5 años de experiencia. Creativa y apasionada por crear soluciones visuales modernas.
+      </p>
+    </div>
+  </div>
+
+  <!-- Trabajador 3 -->
+  <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 mb-4">
+    <img src="https://randomuser.me/api/portraits/men/65.jpg" 
+         alt="Foto trabajador" 
+         class="w-16 h-16 rounded-full object-cover">
+    <div class="flex-1">
+      <h3 class="text-lg font-semibold text-gray-800">Julián Torres</h3>
+      <div class="flex flex-wrap gap-2 my-1">
+        <span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Carpintero</span>
+        <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Constructor</span>
+      </div>
+      <div class="flex items-center my-2">
+        <!-- 3 llenas, 1 media, 1 vacía -->
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 opacity-50 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <span class="ml-2 text-sm text-gray-600">3.5</span>
+      </div>
+      <p class="text-sm text-gray-600 leading-snug">
+        Carpintero con más de 10 años en el rubro. Experto en muebles a medida y reparaciones para el hogar.
+      </p>
+    </div>
+  </div>
+
+  <!-- Trabajador 4 -->
+  <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4">
+    <img src="https://randomuser.me/api/portraits/women/12.jpg" 
+         alt="Foto trabajadora" 
+         class="w-16 h-16 rounded-full object-cover">
+    <div class="flex-1">
+      <h3 class="text-lg font-semibold text-gray-800">Lucía Fernández</h3>
+      <div class="flex flex-wrap gap-2 my-1">
+        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Jardinera</span>
+        <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Paisajista</span>
+      </div>
+      <div class="flex items-center my-2">
+        <!-- 4 llenas, 1 vacía -->
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
+        <span class="ml-2 text-sm text-gray-600">4.2</span>
+      </div>
+      <p class="text-sm text-gray-600 leading-snug">
+        Amante de la naturaleza, con experiencia en jardinería y paisajismo. Crea y mantiene espacios verdes llenos de vida.
+      </p>
+    </div>
+  </div>
+</section>
+ 
+
+
 <!-- Barra inferior fija -->
 <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center py-1.5 shadow-md z-50">
   
