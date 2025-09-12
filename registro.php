@@ -6,15 +6,12 @@
     <title>Labu - Login y Registro</title>
     <!-- Incluir la fuente Inter -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <!-- Incluir los estilos generales y los específicos del login -->
-    <link rel="stylesheet" href="Estilos/style.css">
     <link rel="stylesheet" href="Estilos/login.css">
 </head>
 <body>
 
-
     <div class="container">
-                <img src="Img/logo.jpg" alt="Logo de Labu" class="logo">
+        <img src="Img/labu.png" alt="Logo de Labu" class="logo">
 
         <div class="form-toggle">
             <button id="tab-login" class="tab-button active">Iniciar Sesión</button>
@@ -84,17 +81,10 @@
                     <label for="register-provincia">Provincia</label>
                     <select id="register-provincia" name="id_provincia" required>
                         <option value="">Selecciona tu provincia</option>
-                        <?php
-                            include 'Controlador/db_connect.php';
-                            $sql_provincias = "SELECT id_provincia, nombre_provincia FROM provincias ORDER BY nombre_provincia";
-                            $result_provincias = $conn->query($sql_provincias);
-                            if ($result_provincias->num_rows > 0) {
-                                while($row = $result_provincias->fetch_assoc()) {
-                                    echo "<option value='" . htmlspecialchars($row['id_provincia']) . "'>" . htmlspecialchars($row['nombre_provincia']) . "</option>";
-                                }
-                            }
-                            $conn->close();
-                        ?>
+                        <!-- Opciones de ejemplo para un archivo estático -->
+                        <option value="1">Buenos Aires</option>
+                        <option value="2">Córdoba</option>
+                        <option value="3">Santa Fe</option>
                     </select>
                 </div>
                 <div class="input-group">
