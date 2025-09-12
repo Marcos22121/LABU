@@ -12,7 +12,7 @@
   <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
     <!-- Logo izquierda -->
     <div class="logo">
-      <img src="img/labu.png" alt="Logo" class="h-10">
+      <img src="img/labu.png" alt="Logo" class="h-12">
     </div>
 
     <!-- Iconos derecha -->
