@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-09-2025 a las 18:42:25
+-- Tiempo de generación: 12-09-2025 a las 21:22:17
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,55 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `labu`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `conversaciones`
+--
+
+CREATE TABLE `conversaciones` (
+  `id_conversacion` int(11) NOT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `ultimo_mensaje` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `especialidades`
+--
+
+CREATE TABLE `especialidades` (
+  `id_especialidad` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `foto_url` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT 1,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `especialidades`
+--
+
+INSERT INTO `especialidades` (`id_especialidad`, `nombre`, `descripcion`, `foto_url`, `activo`, `fecha_creacion`) VALUES
+(1, 'Electricista', 'Trabajos de electricidad en el hogar, comercios o industrias', 'img/especialidades/electricista.webp', 1, '2025-09-12 18:00:29'),
+(2, 'Plomero', 'Reparación e instalación de cañerías, sanitarios y gas', 'img/especialidades/plomero.jpg', 1, '2025-09-12 18:00:29'),
+(3, 'Carpintero', 'Fabricación y reparación de muebles y estructuras de madera', 'img/especialidades/carpintero.webp', 1, '2025-09-12 18:00:29'),
+(20, 'Pintor', 'Pintura de interiores y exteriores, restauración de superficies', 'img/especialidades/pintor.jpg', 1, '2025-09-12 18:28:42'),
+(21, 'Jardinero', 'Diseño, mantenimiento y cuidado de jardines y áreas verdes', 'img/especialidades/jardinero.webp', 1, '2025-09-12 18:28:42'),
+(22, 'Albañil', 'Construcción, reformas y trabajos en mampostería y cemento', 'img/especialidades/albanil.jpg', 1, '2025-09-12 18:28:42'),
+(23, 'Cerrajero', 'Apertura de cerraduras, cambio de llaves y sistemas de seguridad', 'img/especialidades/cerrajero.jpg', 1, '2025-09-12 18:28:42'),
+(24, 'Gasista', 'Instalación y reparación de sistemas de gas y calefacción', 'img/especialidades/gasista.jpg', 1, '2025-09-12 18:28:42'),
+(25, 'Herrero', 'Fabricación y reparación de estructuras metálicas, rejas, portones', 'img/especialidades/herrero.webp', 1, '2025-09-12 18:28:42'),
+(26, 'Mecánico', 'Reparación y mantenimiento de vehículos automotores', 'img/especialidades/mecanico.webp', 1, '2025-09-12 18:28:42'),
+(27, 'Tecnico de PC', 'Reparación y mantenimiento de computadoras y notebooks', 'img/especialidades/tecnico_pc.jpg', 1, '2025-09-12 18:28:42'),
+(28, 'Tecnico de Celulares', 'Reparación de smartphones, tablets y dispositivos móviles', 'img/especialidades/tecnico_celulares.jpg', 1, '2025-09-12 18:28:42'),
+(29, 'Mudanzas', 'Transporte de muebles y pertenencias de un lugar a otro', 'img/especialidades/mudanzas.jpg', 1, '2025-09-12 18:28:42'),
+(30, 'Niñera', 'Cuidado de niños, asistencia y acompañamiento infantil', 'img/especialidades/ninera.jpg', 1, '2025-09-12 18:28:42'),
+(31, 'Cuidado de Adultos Mayores', 'Asistencia y acompañamiento de personas mayores', 'img/especialidades/adultos_mayores.png', 1, '2025-09-12 18:28:42'),
+(32, 'Limpieza', 'Servicios de limpieza de hogares, oficinas y locales', 'img/especialidades/limpieza.jpg', 1, '2025-09-12 18:28:42');
 
 -- --------------------------------------------------------
 
@@ -206,6 +255,34 @@ INSERT INTO `localidades` (`id_localidad`, `nombre_localidad`, `id_provincia`) V
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `mensajes`
+--
+
+CREATE TABLE `mensajes` (
+  `id_mensaje` int(11) NOT NULL,
+  `id_conversacion` int(11) NOT NULL,
+  `id_remitente` int(11) NOT NULL,
+  `contenido` text DEFAULT NULL,
+  `tipo` enum('texto','imagen','archivo') DEFAULT 'texto',
+  `url_archivo` varchar(255) DEFAULT NULL,
+  `fecha_envio` timestamp NOT NULL DEFAULT current_timestamp(),
+  `leido` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `participantes_conversacion`
+--
+
+CREATE TABLE `participantes_conversacion` (
+  `id_conversacion` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `provincias`
 --
 
@@ -280,14 +357,14 @@ CREATE TABLE `servicios` (
 CREATE TABLE `trabajadores` (
   `id_trabajador` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  `especialidad` varchar(100) NOT NULL,
   `descripcion_trabajo` text DEFAULT NULL,
   `puntaje_promedio` decimal(3,2) DEFAULT 0.00,
   `cantidad_reviews` int(11) DEFAULT 0,
   `plan_suscripcion` enum('Free','Basico','Premium') DEFAULT 'Free',
   `fecha_inicio_plan` date DEFAULT NULL,
   `fecha_fin_plan` date DEFAULT NULL,
-  `activo` tinyint(1) DEFAULT 1
+  `activo` tinyint(1) DEFAULT 1,
+  `id_especialidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -318,11 +395,24 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `fecha_nacimiento`, `genero`, `telefono`, `email`, `contraseña`, `fecha_creacion`, `bio`, `foto_perfil`, `id_localidad`, `es_trabajador`) VALUES
-(1, 'Pedro ', 'Coppola', '', '0000-00-00', 'Otro', NULL, 'pedroicoppola@gmail.com', '$2y$10$GpD4aGc1D8Pkd0azLJagnOmvJ1d1uWa8u7TtOH3c8GmpySPS4WjcW', '2025-09-08 18:59:41', NULL, NULL, 7, 0);
+(5, 'Pedro', 'Coppola', '47515094', '2007-01-05', 'M', '01139131817', 'pedroicoppola@gmail.com', '$2y$10$tW/wFGv68MIEdKg0gPLoEu6dZroF83RcdobdV9yie1Nh1xVLGOci2', '2025-09-12 17:00:28', NULL, NULL, 7, 0);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `conversaciones`
+--
+ALTER TABLE `conversaciones`
+  ADD PRIMARY KEY (`id_conversacion`);
+
+--
+-- Indices de la tabla `especialidades`
+--
+ALTER TABLE `especialidades`
+  ADD PRIMARY KEY (`id_especialidad`),
+  ADD UNIQUE KEY `nombre` (`nombre`);
 
 --
 -- Indices de la tabla `localidades`
@@ -330,6 +420,21 @@ INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `dni`, `fecha_nacimi
 ALTER TABLE `localidades`
   ADD PRIMARY KEY (`id_localidad`),
   ADD KEY `id_provincia` (`id_provincia`);
+
+--
+-- Indices de la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  ADD PRIMARY KEY (`id_mensaje`),
+  ADD KEY `id_conversacion` (`id_conversacion`),
+  ADD KEY `id_remitente` (`id_remitente`);
+
+--
+-- Indices de la tabla `participantes_conversacion`
+--
+ALTER TABLE `participantes_conversacion`
+  ADD PRIMARY KEY (`id_conversacion`,`id_usuario`),
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `provincias`
@@ -356,7 +461,8 @@ ALTER TABLE `servicios`
 --
 ALTER TABLE `trabajadores`
   ADD PRIMARY KEY (`id_trabajador`),
-  ADD KEY `id_usuario` (`id_usuario`);
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `fk_trabajador_especialidad` (`id_especialidad`);
 
 --
 -- Indices de la tabla `usuarios`
@@ -372,10 +478,28 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `conversaciones`
+--
+ALTER TABLE `conversaciones`
+  MODIFY `id_conversacion` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `especialidades`
+--
+ALTER TABLE `especialidades`
+  MODIFY `id_especialidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
 -- AUTO_INCREMENT de la tabla `localidades`
 --
 ALTER TABLE `localidades`
   MODIFY `id_localidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+
+--
+-- AUTO_INCREMENT de la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `provincias`
@@ -405,7 +529,7 @@ ALTER TABLE `trabajadores`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
@@ -418,6 +542,20 @@ ALTER TABLE `localidades`
   ADD CONSTRAINT `localidades_ibfk_1` FOREIGN KEY (`id_provincia`) REFERENCES `provincias` (`id_provincia`);
 
 --
+-- Filtros para la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  ADD CONSTRAINT `mensajes_ibfk_1` FOREIGN KEY (`id_conversacion`) REFERENCES `conversaciones` (`id_conversacion`) ON DELETE CASCADE,
+  ADD CONSTRAINT `mensajes_ibfk_2` FOREIGN KEY (`id_remitente`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `participantes_conversacion`
+--
+ALTER TABLE `participantes_conversacion`
+  ADD CONSTRAINT `participantes_conversacion_ibfk_1` FOREIGN KEY (`id_conversacion`) REFERENCES `conversaciones` (`id_conversacion`) ON DELETE CASCADE,
+  ADD CONSTRAINT `participantes_conversacion_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `reseñas`
 --
 ALTER TABLE `reseñas`
@@ -428,6 +566,7 @@ ALTER TABLE `reseñas`
 -- Filtros para la tabla `trabajadores`
 --
 ALTER TABLE `trabajadores`
+  ADD CONSTRAINT `fk_trabajador_especialidad` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidades` (`id_especialidad`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `trabajadores_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
 --

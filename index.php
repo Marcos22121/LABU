@@ -37,7 +37,6 @@
    title="Mensajes">
   <img src="img/chat.png" alt="Mensajes" class="w-6 h-6 object-contain">
 </a>
-
     </div>
   </header>
 
@@ -66,78 +65,73 @@
     </div>
   </section>
    <!-- Sección de trabajos más buscados -->
+<?php
+include 'Controlador/db_connect.php';
+
+// Consulta: especialidades más populares
+$sql = "
+    SELECT e.id_especialidad, e.nombre, e.descripcion, e.foto_url, COUNT(t.id_trabajador) AS cantidad
+    FROM especialidades e
+    LEFT JOIN trabajadores t ON e.id_especialidad = t.id_especialidad
+    GROUP BY e.id_especialidad
+    ORDER BY cantidad DESC
+    LIMIT 5
+";
+$result = $conn->query($sql);
+
+$especialidades = [];
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $especialidades[] = $row;
+    }
+} else {
+    // Si no hay resultados, saco 5 random
+    $sql_random = "SELECT id_especialidad, nombre, descripcion, foto_url FROM especialidades ORDER BY RAND() LIMIT 5";
+    $result_random = $conn->query($sql_random);
+
+    if ($result_random && $result_random->num_rows > 0) {
+        while ($row = $result_random->fetch_assoc()) {
+            $especialidades[] = $row;
+        }
+    }
+}
+$conn->close();
+?>
+
 <section class="px-6 py-10">
   <!-- Título -->
   <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">
     Trabajos más buscados
   </h2>
 
-  <!-- Grid de cajas -->
+  <!-- Grid dinámica -->
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-    
-    <!-- Electricista -->
-    <a href="#electricista" class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-      <img src="img/elec.webp" 
-           alt="Electricista" 
-           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
-      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-      <span class="relative text-white text-lg font-semibold">Electricista</span>
-    </a>
-
-    <!-- Plomero -->
-    <a href="#plomero" class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-      <img src="img/plomero.jpg" 
-           alt="Plomero" 
-           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
-      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-      <span class="relative text-white text-lg font-semibold">Plomero</span>
-    </a>
-
-    <!-- Carpintero -->
-    <a href="#carpintero" class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-      <img src="img/carpin.webp" 
-           alt="Carpintero" 
-           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
-      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-      <span class="relative text-white text-lg font-semibold">Carpintero</span>
-    </a>
-
-    <!-- Pintor -->
-    <a href="#pintor" class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-      <img src="img/pintor.jpg" 
-           alt="Pintor" 
-           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
-      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-      <span class="relative text-white text-lg font-semibold">Pintor</span>
-    </a>
-
-    <!-- Jardinero -->
-    <a href="#jardinero" class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-      <img src="img/jardinero.webp" 
-           alt="Jardinero" 
-           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
-      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-      <span class="relative text-white text-lg font-semibold">Jardinero</span>
-    </a>
+    <?php foreach ($especialidades as $esp): ?>
+      <a href="#<?php echo strtolower($esp['nombre']); ?>" 
+         class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
+        <img src="<?php echo $esp['foto_url'] ? htmlspecialchars($esp['foto_url']) : 'img/trabajo.webp'; ?>" 
+             alt="<?php echo htmlspecialchars($esp['nombre']); ?>" 
+             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <span class="relative text-white text-lg font-semibold">
+          <?php echo htmlspecialchars($esp['nombre']); ?>
+        </span>
+      </a>
+    <?php endforeach; ?>
 
     <!-- Ver todos -->
-   <a href="#todos" 
-   class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
-
-  <!-- Imagen de fondo -->
-  <img src="img/trabajo.webp" 
-       alt="Trabajos" 
-       class="absolute inset-0 w-full h-full object-cover">
-
-  <!-- Overlay azul -->
-  <div class="absolute inset-0 bg-blue-600 bg-opacity-30"></div>
-
-  <!-- Texto -->
-  <span class="relative z-10 text-white text-lg font-semibold">Ver todos</span>
-</a>
-
+    <a href="#todos" 
+       class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
+      <img src="img/trabajo.webp" 
+           alt="Trabajos" 
+           class="absolute inset-0 w-full h-full object-cover">
+      <div class="absolute inset-0 bg-blue-600 bg-opacity-30"></div>
+      <span class="relative z-10 text-white text-lg font-semibold">Ver todos</span>
+    </a>
   </div>
 </section>
+
 
 <section class="px-4 py-8 bg-gray-50">
   <h2 class="text-xl font-bold text-gray-800 mb-4">Trabajadores Destacados</h2>
@@ -242,7 +236,6 @@
         <span class="ml-2 text-sm text-gray-600">4.2</span>
       </div>
       <p class="text-sm text-gray-600 leading-snug">
-        Amante de la naturaleza, con experiencia en jardinería y paisajismo. Crea y mantiene espacios verdes llenos de vida.
       </p>
     </div>
   </div>
