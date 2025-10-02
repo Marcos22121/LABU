@@ -3,21 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi App</title>
-  <!-- Importar Tailwind CSS vía CDN -->
+  <title>LABU</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 pb-20">
 
   <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
-    <!-- Logo izquierda -->
     <div class="logo">
       <img src="img/labu.png" alt="Logo" class="h-12">
     </div>
 
-    <!-- Iconos derecha -->
     <div class="flex items-center gap-4">
-      <!-- Notificaciones -->
       <a href="#notificaciones" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" title="Notificaciones">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -31,7 +27,6 @@
         </svg>
       </a>
 
-      <!-- Mensajes -->
      <a href="#mensajes" 
    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" 
    title="Mensajes">
@@ -40,17 +35,13 @@
     </div>
   </header>
 
-    <!-- Hero -->
   <section class="relative h-[70vh] flex items-center justify-center">
-    <!-- Imagen de fondo -->
     <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=80" 
          alt="Trabajo" 
          class="absolute inset-0 w-full h-full object-cover">
 
-    <!-- Overlay azul -->
     <div class="absolute inset-0 bg-blue-900 bg-opacity-50"></div>
 
-    <!-- Contenido -->
     <div class="relative text-center text-white max-w-2xl px-6">
       <h1 class="text-3xl md:text-4xl font-bold mb-4">
         Encuentra tus mejores trabajos en nuestra app
@@ -64,11 +55,8 @@
       </a>
     </div>
   </section>
-   <!-- Sección de trabajos más buscados -->
 <?php
 include 'Controlador/db_connect.php';
-
-// Consulta: especialidades más populares
 $sql = "
     SELECT e.id_especialidad, e.nombre, e.descripcion, e.foto_url, COUNT(t.id_trabajador) AS cantidad
     FROM especialidades e
@@ -86,7 +74,6 @@ if ($result && $result->num_rows > 0) {
         $especialidades[] = $row;
     }
 } else {
-    // Si no hay resultados, saco 5 random
     $sql_random = "SELECT id_especialidad, nombre, descripcion, foto_url FROM especialidades ORDER BY RAND() LIMIT 5";
     $result_random = $conn->query($sql_random);
 
@@ -100,12 +87,10 @@ $conn->close();
 ?>
 
 <section class="px-6 py-10">
-  <!-- Título -->
   <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">
     Trabajos más buscados
   </h2>
 
-  <!-- Grid dinámica -->
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
     <?php foreach ($especialidades as $esp): ?>
       <a href="#<?php echo strtolower($esp['nombre']); ?>" 
@@ -120,7 +105,6 @@ $conn->close();
       </a>
     <?php endforeach; ?>
 
-    <!-- Ver todos -->
     <a href="#todos" 
        class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
       <img src="img/trabajo.webp" 
@@ -136,7 +120,6 @@ $conn->close();
 <section class="px-4 py-8 bg-gray-50">
   <h2 class="text-xl font-bold text-gray-800 mb-4">Trabajadores Destacados</h2>
 
-  <!-- Trabajador 1 -->
   <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 mb-4">
     <img src="https://randomuser.me/api/portraits/men/32.jpg" 
          alt="Foto trabajador" 
@@ -149,7 +132,6 @@ $conn->close();
         <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Mantenimiento</span>
       </div>
       <div class="flex items-center my-2">
-        <!-- 4 llenas, 1 vacía -->
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
@@ -163,7 +145,6 @@ $conn->close();
     </div>
   </div>
 
-  <!-- Trabajador 2 -->
   <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 mb-4">
     <img src="https://randomuser.me/api/portraits/women/44.jpg" 
          alt="Foto trabajadora" 
@@ -175,7 +156,6 @@ $conn->close();
         <span class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">Ilustradora</span>
       </div>
       <div class="flex items-center my-2">
-        <!-- 5 llenas -->
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
@@ -189,7 +169,6 @@ $conn->close();
     </div>
   </div>
 
-  <!-- Trabajador 3 -->
   <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 mb-4">
     <img src="https://randomuser.me/api/portraits/men/65.jpg" 
          alt="Foto trabajador" 
@@ -201,7 +180,6 @@ $conn->close();
         <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Constructor</span>
       </div>
       <div class="flex items-center my-2">
-        <!-- 3 llenas, 1 media, 1 vacía -->
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
@@ -215,7 +193,6 @@ $conn->close();
     </div>
   </div>
 
-  <!-- Trabajador 4 -->
   <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4">
     <img src="https://randomuser.me/api/portraits/women/12.jpg" 
          alt="Foto trabajadora" 
@@ -227,7 +204,6 @@ $conn->close();
         <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full">Paisajista</span>
       </div>
       <div class="flex items-center my-2">
-        <!-- 4 llenas, 1 vacía -->
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
         <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.57 8.332 1.151-6.064 5.888 1.528 8.307L12 18.896l-7.464 4.607 1.528-8.307-6.064-5.888 8.332-1.151z"/></svg>
@@ -243,12 +219,9 @@ $conn->close();
  
 
 
-<!-- Barra inferior fija -->
 <nav class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center py-1.5 shadow-md z-50">
   
-  <!-- Botón Inicio -->
   <a href="#inicio" class="flex flex-col items-center justify-center text-gray-700 hover:text-blue-600 w-1/3">
-    <!-- Icono Home -->
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
@@ -256,10 +229,8 @@ $conn->close();
     <span class="text-xs font-medium">Inicio</span>
   </a>
 
-  <!-- Botón central grande -->
   <a href="#trabajador" 
      class="relative -mt-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg hover:brightness-110 transition">
-    <!-- Icono trabajador -->
     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
@@ -268,9 +239,7 @@ $conn->close();
     </svg>
   </a>
 
-  <!-- Botón Cuenta -->
-  <a href="#cuenta" class="flex flex-col items-center justify-center text-gray-700 hover:text-blue-600 w-1/3">
-    <!-- Icono usuario -->
+  <a href="perfil.php" class="flex flex-col items-center justify-center text-gray-700 hover:text-blue-600 w-1/3">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M5.121 17.804A9 9 0 1112 21a9 
