@@ -3,13 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-
   <title>LABU</title>
-=======
-  <title>Labu</title>
-  <!-- Importar Tailwind CSS vía CDN -->
->>>>>>> 5acafb4d07d4e92153744dcd8343b9a23b258f7d
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 pb-20">
