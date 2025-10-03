@@ -1,6 +1,7 @@
 <?php
 include 'db_connect.php'; // ajustá el path según tu estructura
 
+
 if (!isset($_POST['action'])) {
     die("Acción no especificada.");
 }
@@ -73,8 +74,7 @@ if ($action == 'register') {
             $_SESSION['id_usuario'] = $id_usuario;
             $_SESSION['email'] = $email;
 
-            echo "Inicio de sesión exitoso. ¡Bienvenido de nuevo!";
-            // header("Location: ../Vista/dashboard.php");
+            header("Location: ../index.php");
             // exit();
         } else {
             echo "Email o contraseña incorrectos.";

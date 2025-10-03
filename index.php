@@ -57,6 +57,11 @@
   </section>
 <?php
 include 'Controlador/db_connect.php';
+session_start();
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: registro.php");
+    exit();
+}
 $sql = "
     SELECT e.id_especialidad, e.nombre, e.descripcion, e.foto_url, COUNT(t.id_trabajador) AS cantidad
     FROM especialidades e
