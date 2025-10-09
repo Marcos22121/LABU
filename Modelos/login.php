@@ -48,7 +48,7 @@ if ($action == 'register') {
     if ($stmt->execute()) {
         echo "Registro exitoso. ¡Bienvenido a Labu!";
         // podés hacer un redirect acá si querés
-        // header("Location: ../Vista/dashboard.php");
+            header("Location: ../index.php");
         // exit();
     } else {
         echo "Error: " . $stmt->error;

@@ -13,7 +13,7 @@ $id_usuario_logueado = $_SESSION['id_usuario'];
 $id_usuario_perfil = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : $id_usuario_logueado;
 
 // Traer datos básicos del usuario
-$sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.id_localidad, u.foto_perfil, t.id_trabajador, e.nombre AS especialidad, t.descripcion_trabajo
+$sql = "SELECT u.id_usuario, u.nombre, u.bio, u.apellido, u.id_localidad, u.foto_perfil, t.id_trabajador, e.nombre AS especialidad, t.descripcion_trabajo
         FROM usuarios u
         LEFT JOIN trabajadores t ON u.id_usuario = t.id_usuario
         LEFT JOIN especialidades e ON t.id_especialidad = e.id_especialidad
@@ -28,6 +28,8 @@ $stmt->close();
 if (!$perfil) {
     die("Perfil no encontrado.");
 }
+
+
 
 
 $sql_localidad = "SELECT nombre_localidad FROM localidades WHERE id_localidad = ?";
@@ -95,9 +97,11 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
           <?php endif; ?>
         </div>
         <p class="text-gray-600 mt-1">
-          Vive en <?php echo htmlspecialchars($nombre_localidad); ?>
-        </p>
+          Vive en <?php echo htmlspecialchars($nombre_localidad); ?></p>
+      <br><hr><br>
       </div>
+      
+      
     </div>
 
     <!-- Card de trabajador -->
@@ -115,6 +119,10 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
         </div>
       </div>
     <?php elseif ($id_usuario_logueado == $id_usuario_perfil): ?>
+
+
+                      <p class="text-m text-gray-800 mb-1"><?php echo htmlspecialchars($perfil['bio'])?></p>
+
       <!-- Card comenzar a trabajar -->
       <div class="mt-6 border-t pt-4">
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm text-center">
