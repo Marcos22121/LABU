@@ -16,7 +16,10 @@ include 'Controlador/db_connect.php';
     }
   </script>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+
 
 <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg">
   <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Registrate como Trabajador</h2>

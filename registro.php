@@ -18,7 +18,6 @@
             <button id="tab-register" class="tab-button">Registrarse</button>
         </div>
 
-        <!-- Formulario de Login -->
         <div id="form-login" class="form-content active">
             <h2>Iniciar Sesión</h2>
             <form action="Modelos/login.php" method="POST">
@@ -35,7 +34,6 @@
             </form>
         </div>
 
-        <!-- Formulario de Registro -->
         <div id="form-register" class="form-content">
             <h2>Crear Cuenta</h2>
             <form action="Modelos/login.php" method="POST">
