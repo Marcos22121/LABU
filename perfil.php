@@ -97,6 +97,16 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
         </div>
       </div>
 
+      <?php if ($perfil['id_trabajador'] && $id_usuario_logueado != $id_usuario_perfil): ?>
+  <div class="mt-4 text-center">
+    <a href="mensaje.php?id=<?php echo $perfil['id_usuario']; ?>" 
+       class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-full shadow">
+      Enviar mensaje
+    </a>
+  </div>
+<?php endif; ?>
+
+
     <?php elseif ($id_usuario_logueado == $id_usuario_perfil): ?>
       <!-- Card para comenzar a trabajar -->
       <div class="mt-6 border-t pt-4">
