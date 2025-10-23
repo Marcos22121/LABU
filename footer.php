@@ -12,7 +12,7 @@
     <span class="text-xs font-medium">Inicio</span>
   </a>
 
-  <a href="#trabajador" 
+  <a href="buscar.php" 
      class="relative -mt-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg hover:brightness-110 transition">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

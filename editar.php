@@ -83,6 +83,9 @@ $stmt->close();
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+   <?php include 'header.php'; ?>
+
+  
 
   <form action="editar.php" method="POST" enctype="multipart/form-data"
     class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md space-y-4">
@@ -123,6 +126,8 @@ $stmt->close();
 
   <button type="submit" class="w-full py-2 bg-blue-600 text-white font-bold rounded-lg">Guardar Cambios</button>
   </form>
+  <?php include 'footer.php'; ?>
 
 </body>
+
 </html>

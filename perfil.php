@@ -8,12 +8,15 @@ if (!isset($_SESSION['id_usuario'])) {
     exit();
 }
 
-// Tomar id del perfil a ver
+// ID del usuario logueado
 $id_usuario_logueado = $_SESSION['id_usuario'];
-$id_usuario_perfil = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : $id_usuario_logueado;
 
-// Traer datos básicos del usuario
-$sql = "SELECT u.id_usuario, u.nombre, u.bio, u.apellido, u.id_localidad, u.foto_perfil, t.id_trabajador, e.nombre AS especialidad, t.descripcion_trabajo
+// Tomar el ID del perfil que se quiere ver (usa ?id= en la URL)
+$id_usuario_perfil = isset($_GET['id']) ? intval($_GET['id']) : $id_usuario_logueado;
+
+// Traer datos del usuario
+$sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.bio, u.id_localidad, u.foto_perfil, 
+               t.id_trabajador, e.nombre AS especialidad, t.descripcion_trabajo
         FROM usuarios u
         LEFT JOIN trabajadores t ON u.id_usuario = t.id_usuario
         LEFT JOIN especialidades e ON t.id_especialidad = e.id_especialidad
@@ -29,9 +32,7 @@ if (!$perfil) {
     die("Perfil no encontrado.");
 }
 
-
-
-
+// Obtener nombre de la localidad
 $sql_localidad = "SELECT nombre_localidad FROM localidades WHERE id_localidad = ?";
 $stmt_localidad = $conn->prepare($sql_localidad);
 $stmt_localidad->bind_param("i", $perfil['id_localidad']);
@@ -40,7 +41,6 @@ $result_localidad = $stmt_localidad->get_result();
 $localidad = $result_localidad->fetch_assoc();
 $stmt_localidad->close();
 
-// Si no se encuentra la localidad, usar texto por defecto
 $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad desconocida';
 ?>
 
@@ -60,7 +60,7 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
   <div class="bg-white rounded-xl shadow-md p-6 mb-6">
     <div class="flex items-start gap-4">
       <img src="<?php echo $perfil['foto_perfil'] ?: 'img/default-profile.png'; ?>" alt="Foto perfil"
-           class="w-20 h-20 rounded-full object-cover shadow-sm">
+          class="w-20 h-20 rounded-full object-cover shadow-sm">
       <div class="flex-1">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-bold text-gray-800">
@@ -68,20 +68,22 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
           </h2>
 
           <?php if ($id_usuario_logueado == $id_usuario_perfil): ?>
-            <a href="editar.php" class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full shadow">
+            <a href="editar.php" 
+               class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full shadow">
               Editar
             </a>
           <?php endif; ?>
         </div>
-        <p class="text-gray-600 mt-1">
-          Vive en <?php echo htmlspecialchars($nombre_localidad); ?></p>
-      <br><hr><br>
+
+        <p class="text-gray-600 mt-1">Vive en <?php echo htmlspecialchars($nombre_localidad); ?></p>
+        <?php if ($perfil['bio']): ?>
+          <p class="text-sm text-gray-700 mt-3"><?php echo nl2br(htmlspecialchars($perfil['bio'])); ?></p>
+        <?php endif; ?>
       </div>
-      
-      
     </div>
 
     <?php if ($perfil['id_trabajador']): ?>
+      <!-- Info de trabajador -->
       <div class="mt-6 border-t pt-4">
         <div class="w-full bg-gray-50 rounded-xl p-4 shadow-sm flex items-start gap-4">
           <div class="flex-1">
@@ -94,12 +96,9 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
           </div>
         </div>
       </div>
+
     <?php elseif ($id_usuario_logueado == $id_usuario_perfil): ?>
-
-
-                      <p class="text-m text-gray-800 mb-1"><?php echo htmlspecialchars($perfil['bio'])?></p>
-
-      <!-- Card comenzar a trabajar -->
+      <!-- Card para comenzar a trabajar -->
       <div class="mt-6 border-t pt-4">
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm text-center">
           <img src="img/trabajo.webp" alt="Trabajo" class="w-24 h-24 mx-auto mb-3 rounded-lg object-cover">
@@ -108,7 +107,7 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
             Publicá tus servicios en la app, conectá con clientes y hacé crecer tu trabajo fácilmente.
           </p>
           <a href="trabajar.php" 
-             class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-full shadow">
+            class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-full shadow">
             Comenzar a trabajar
           </a>
         </div>
@@ -121,3 +120,4 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
 
 </body>
 </html>
+ 
