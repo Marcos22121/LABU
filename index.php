@@ -24,7 +24,7 @@
       <p class="text-lg md:text-xl mb-6">
         Conecta con oportunidades únicas y haz crecer tu carrera.
       </p>
-      <a href="#buscar" 
+      <a href="buscar.php" 
          class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition">
         Buscar trabajadores
       </a>
