@@ -85,7 +85,7 @@ $conn->close();
       </a>
     <?php endforeach; ?>
 
-    <a href="#todos" 
+    <a href="alltrabajos.php" 
        class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
       <img src="img/trabajo.webp" 
            alt="Trabajos" 
