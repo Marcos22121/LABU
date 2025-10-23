@@ -73,16 +73,17 @@ $conn->close();
 
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
     <?php foreach ($especialidades as $esp): ?>
-      <a href="#<?php echo strtolower($esp['nombre']); ?>" 
-         class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-        <img src="<?php echo $esp['foto_url'] ? htmlspecialchars($esp['foto_url']) : 'img/trabajo.webp'; ?>" 
-             alt="<?php echo htmlspecialchars($esp['nombre']); ?>" 
-             class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all">
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-        <span class="relative text-white text-lg font-semibold">
-          <?php echo htmlspecialchars($esp['nombre']); ?>
-        </span>
-      </a>
+      <a href="buscar.php?especialidad=<?= urlencode($esp['nombre']) ?>" 
+   class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
+  <img src="<?php echo $esp['foto_url'] ? htmlspecialchars($esp['foto_url']) : 'img/trabajo.webp'; ?>" 
+       alt="<?php echo htmlspecialchars($esp['nombre']); ?>" 
+       class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-300">
+  <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition"></div>
+  <span class="relative text-white text-lg font-semibold text-center px-2">
+    <?php echo htmlspecialchars($esp['nombre']); ?>
+  </span>
+</a>
+
     <?php endforeach; ?>
 
     <a href="alltrabajos.php" 
