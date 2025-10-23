@@ -8,17 +8,20 @@ $email_usuario = $_SESSION['email'] ?? null;
 // Obtener especialidades y localidades para los filtros
 $especialidades = $conn->query("SELECT nombre FROM especialidades ORDER BY nombre ASC");
 $localidades = $conn->query("SELECT id_localidad, nombre_localidad FROM localidades ORDER BY nombre_localidad ASC");
+
+// 🔹 Capturar especialidad desde la URL (evita undefined variable)
+$especialidadSeleccionada = isset($_GET['especialidad']) ? $_GET['especialidad'] : '';
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buscar Trabajadores - LABU</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="Estilosstyle.css">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -30,13 +33,11 @@ $localidades = $conn->query("SELECT id_localidad, nombre_localidad FROM localida
       display: none;
     }
   </style>
-  <link rel="stylesheet" href="Estilosstyle.css">
 </head>
 <body>
 
   <!-- HEADER -->
- <?php include 'header.php'; ?>
-
+  <?php include 'header.php'; ?>
 
   <!-- CONTENIDO -->
   <main class="max-w-3xl mx-auto px-4 mt-6">
@@ -49,10 +50,15 @@ $localidades = $conn->query("SELECT id_localidad, nombre_localidad FROM localida
 
       <!-- FILTROS -->
       <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+        <!-- 🔹 Select de especialidad -->
         <select id="especialidad" name="especialidad" class="border border-gray-300 rounded-lg px-3 py-2">
           <option value="">Todas las especialidades</option>
           <?php while ($esp = $especialidades->fetch_assoc()): ?>
-            <option value="<?= htmlspecialchars($esp['nombre']) ?>"><?= htmlspecialchars($esp['nombre']) ?></option>
+            <option value="<?= htmlspecialchars($esp['nombre']) ?>" 
+              <?= ($especialidadSeleccionada === $esp['nombre']) ? 'selected' : '' ?>>
+              <?= htmlspecialchars($esp['nombre']) ?>
+            </option>
           <?php endwhile; ?>
         </select>
 
@@ -154,10 +160,16 @@ $localidades = $conn->query("SELECT id_localidad, nombre_localidad FROM localida
       buscar();
     });
 
-    // Búsqueda inicial
+    // 🔹 Búsqueda inicial (si ya hay filtros o especialidad preseleccionada)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('especialidad')) {
+      $("#especialidad").val(urlParams.get('especialidad'));
+    }
     buscar();
+
   });
   </script>
 
 </body>
 </html>
+ 
