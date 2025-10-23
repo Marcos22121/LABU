@@ -24,7 +24,7 @@
         </svg>
       </a>
 
-     <a href="#mensajes" 
+     <a href="mensajes.php" 
    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" 
    title="Mensajes">
   <img src="img/chat.png" alt="Mensajes" class="w-6 h-6 object-contain">

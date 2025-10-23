@@ -27,10 +27,9 @@ $conversacion = $result->fetch_assoc();
 $stmt->close();
 
 if ($conversacion) {
-    // Ya existe conversación → simplemente abrila
     $id_conversacion = $conversacion['id_conversacion'];
 } else {
-    // No existe conversación → verificar que el receptor sea trabajador
+    // Verificar que el receptor sea trabajador
     $sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id_receptor);
@@ -43,7 +42,7 @@ if ($conversacion) {
         die("Solo podés iniciar conversaciones con trabajadores.");
     }
 
-    // Crear nueva conversación
+    // Crear conversación nueva
     $conn->query("INSERT INTO conversaciones (fecha_creacion) VALUES (NOW())");
     $id_conversacion = $conn->insert_id;
 
@@ -53,48 +52,13 @@ if ($conversacion) {
     $stmt->close();
 }
 
-// Enviar mensaje
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $contenido = trim($_POST['mensaje']);
-    $tipo = 'texto';
-    $url_archivo = null;
-
-    // Manejar archivo adjunto
-    if (!empty($_FILES['archivo']['name'])) {
-        $dir = "uploads/mensajes/";
-        if (!is_dir($dir)) mkdir($dir, 0777, true);
-
-        $fileName = uniqid("msg_") . "_" . basename($_FILES["archivo"]["name"]);
-        $target = $dir . $fileName;
-
-        if (move_uploaded_file($_FILES["archivo"]["tmp_name"], $target)) {
-            $url_archivo = $target;
-
-            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-            $tipo = in_array($ext, ['jpg','jpeg','png','webp','gif','jfif']) ? 'imagen' : 'archivo';
-        }
-    }
-
-    $stmt = $conn->prepare("INSERT INTO mensajes (id_conversacion, id_remitente, contenido, tipo, url_archivo) 
-                            VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("iisss", $id_conversacion, $id_usuario_logueado, $contenido, $tipo, $url_archivo);
-    $stmt->execute();
-    $stmt->close();
-
-    // Actualizar último mensaje
-    $conn->query("UPDATE conversaciones SET ultimo_mensaje = NOW() WHERE id_conversacion = $id_conversacion");
-
-    header("Location: mensaje.php?id=$id_receptor");
-    exit();
-}
-
-// Traer mensajes
+// Traer mensajes iniciales
 $stmt = $conn->prepare("SELECT * FROM mensajes WHERE id_conversacion = ? ORDER BY fecha_envio ASC");
 $stmt->bind_param("i", $id_conversacion);
 $stmt->execute();
 $mensajes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
-?>>
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -103,37 +67,106 @@ $stmt->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .bolas {
+      height: 500px;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
 <?php include 'header.php'; ?>
 
-<div class="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full">
-  <?php foreach ($mensajes as $m): ?>
-    <div class="mb-3 <?php echo $m['id_remitente'] == $id_usuario_logueado ? 'text-right' : ''; ?>">
-      <div class="<?php echo $m['id_remitente'] == $id_usuario_logueado ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'; ?> 
-                  inline-block px-4 py-2 rounded-lg max-w-[80%] text-sm">
-        <?php if ($m['tipo'] == 'imagen'): ?>
-          <img src="<?php echo htmlspecialchars($m['url_archivo']); ?>" alt="imagen" class="rounded-lg mb-1 max-w-xs">
-        <?php elseif ($m['tipo'] == 'archivo'): ?>
-          <a href="<?php echo htmlspecialchars($m['url_archivo']); ?>" target="_blank" class="underline">
-            Descargar archivo
-          </a><br>
-        <?php endif; ?>
-        <?php echo nl2br(htmlspecialchars($m['contenido'])); ?>
-      </div>
-      <div class="text-xs text-gray-500 mt-1"><?php echo $m['fecha_envio']; ?></div>
-    </div>
-  <?php endforeach; ?>
+<!-- Contenedor de mensajes -->
+<div id="chatContainer" class="flex-1 overflow-y-auto p-4 pb-32 max-w-2xl mx-auto w-full" style="scroll-behavior: smooth; max-width=100%;">
+  <!-- Los mensajes se cargarán aquí vía AJAX -->
 </div>
 
-<form method="POST" enctype="multipart/form-data" class="bg-white p-4 border-t flex gap-2 sticky bottom-0">
+<!-- Preview del archivo -->
+<div id="previewContainer" class="hidden fixed bottom-[138px] left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-lg p-3 w-11/12 max-w-2xl border">
+  <div id="previewContent" class="flex items-center gap-3 z-10">
+    <img id="previewImage" src="" alt="" class="max-h-20 rounded hidden">
+    <span id="previewFileName" class="text-gray-700 text-sm font-medium"></span>
+    <button id="removePreview" class="ml-auto text-red-500 hover:text-red-700 text-sm">✕</button>
+  </div>
+</div>
+
+<!-- Barra inferior del chat -->
+<form id="formMensaje" enctype="multipart/form-data" 
+      class="fixed bottom-[51px] left-0 w-full bg-white p-3 border-t flex gap-2 shadow-md" style="padding-bottom: 1.5rem;">
+
   <input type="text" name="mensaje" placeholder="Escribí un mensaje..." required 
          class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+  
   <input type="file" name="archivo" class="hidden" id="fileInput">
+  
   <label for="fileInput" class="cursor-pointer bg-gray-200 px-3 py-2 rounded-lg text-sm hover:bg-gray-300">📎</label>
-  <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">Enviar</button>
+  
+  <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+    Enviar
+  </button>
 </form>
+
+<style>
+  /* Para que el scroll del chat no se tape con el form */
+  #chatContainer {
+    scroll-behavior: smooth;
+  }
+</style>
+
+<script>
+$(document).ready(function() {
+  const idConversacion = <?php echo $id_conversacion; ?>;
+  const chatContainer = $('#chatContainer');
+
+  // Baja automáticamente al último mensaje
+  function scrollToBottom() {
+    chatContainer.stop().animate({ 
+      scrollTop: chatContainer[0].scrollHeight 
+    }, 400);
+  }
+
+  // Cargar los mensajes (con AJAX)
+  function cargarMensajes(scroll = false) {
+    $.get('get_messages.php', { id_conversacion: idConversacion }, function(data) {
+      chatContainer.html(data);
+      if (scroll) scrollToBottom();
+    });
+  }
+
+  // Primer carga → baja al final
+  cargarMensajes(true);
+
+  // Actualiza cada 3s pero solo baja si estás cerca del final
+  setInterval(() => {
+    const nearBottom = chatContainer.scrollTop() + chatContainer.height() >= chatContainer[0].scrollHeight - 100;
+    cargarMensajes(nearBottom);
+  }, 3000);
+
+  // Enviar mensaje con AJAX
+  $('#formMensaje').on('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    formData.append('id_conversacion', idConversacion);
+
+    $.ajax({
+      url: 'send_message.php',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function() {
+        $('#formMensaje')[0].reset();
+        $('#previewContainer').addClass('hidden');
+        $('#fileInput').val('');
+        cargarMensajes(true); // vuelve a bajar al último mensaje
+      }
+    });
+  });
+});
+</script>
+
 
 <?php include 'footer.php'; ?>
 
