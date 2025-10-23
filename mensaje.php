@@ -14,19 +14,6 @@ if (!$id_receptor || $id_receptor == $id_usuario_logueado) {
     die("Conversación inválida.");
 }
 
-// Verificar que el receptor sea un trabajador
-$sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id_receptor);
-$stmt->execute();
-$res = $stmt->get_result();
-$es_trabajador = $res->num_rows > 0;
-$stmt->close();
-
-if (!$es_trabajador) {
-    die("Solo podés iniciar conversaciones con trabajadores.");
-}
-
 // Buscar si ya existe conversación entre ambos
 $sql = "SELECT c.id_conversacion 
         FROM conversaciones c
@@ -40,8 +27,22 @@ $conversacion = $result->fetch_assoc();
 $stmt->close();
 
 if ($conversacion) {
+    // Ya existe conversación → simplemente abrila
     $id_conversacion = $conversacion['id_conversacion'];
 } else {
+    // No existe conversación → verificar que el receptor sea trabajador
+    $sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_receptor);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $es_trabajador = $res->num_rows > 0;
+    $stmt->close();
+
+    if (!$es_trabajador) {
+        die("Solo podés iniciar conversaciones con trabajadores.");
+    }
+
     // Crear nueva conversación
     $conn->query("INSERT INTO conversaciones (fecha_creacion) VALUES (NOW())");
     $id_conversacion = $conn->insert_id;
@@ -93,12 +94,13 @@ $stmt->bind_param("i", $id_conversacion);
 $stmt->execute();
 $mensajes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
-?>
+?>>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
