@@ -10,31 +10,23 @@
     </div>
     </a>
     <?php if (isset($_SESSION['id_usuario'])): ?>
-  <a href="logout.php" 
-     class="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full shadow transition">
-     Cerrar sesión
-  </a>
-<?php endif; ?>
+ 
 
     
     <div class="flex items-center gap-4">
-      <a href="notificaciones.php" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" title="Notificaciones">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 
-               0 0118 14.158V11a6.002 6.002 
-               0 00-4-5.659V5a2 2 0 10-4 
-               0v.341C7.67 6.165 6 8.388 6 
-               11v3.159c0 .538-.214 1.055-.595 
-               1.436L4 17h5m6 0v1a3 3 0 
-               11-6 0v-1m6 0H9" />
-        </svg>
-      </a>
+  <a href="#" class="text-gray-500 hover:text-gray-700">
+    <i class="ri-notification-3-line text-xl"></i>
+  </a>
+  <a href="#" class="text-gray-500 hover:text-gray-700">
+    <i class="ri-chat-3-line text-xl"></i>
+  </a>
 
-     <a href="mensajes.php" 
-   class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" 
-   title="Mensajes">
-  <img src="img/chat.png" alt="Mensajes" class="w-6 h-6 object-contain">
-</a>
-    </div>
+  <?php if (isset($_SESSION['id_usuario'])): ?>
+    <a href="logout.php" 
+       class="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full shadow transition">
+      Cerrar sesión
+    </a>
+  <?php endif; ?>
+</div>
+
   </header>
