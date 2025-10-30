@@ -137,7 +137,8 @@ $(document).ready(function() {
 
   // Primer carga → baja al final
   cargarMensajes(true);
-
+  scrollToBottom();
+  
   // Actualiza cada 3s pero solo baja si estás cerca del final
   setInterval(() => {
     const nearBottom = chatContainer.scrollTop() + chatContainer.height() >= chatContainer[0].scrollHeight - 100;
