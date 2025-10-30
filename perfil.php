@@ -11,7 +11,7 @@ if (!isset($_SESSION['id_usuario'])) {
 // ID del usuario logueado
 $id_usuario_logueado = $_SESSION['id_usuario'];
 
-// Tomar el ID del perfil que se quiere ver (usa ?id= en la URL)
+// Tomar el ID del perfil que se quiere ver (?id= en la URL)
 $id_usuario_perfil = isset($_GET['id']) ? intval($_GET['id']) : $id_usuario_logueado;
 
 // Traer datos del usuario
@@ -42,6 +42,21 @@ $localidad = $result_localidad->fetch_assoc();
 $stmt_localidad->close();
 
 $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad desconocida';
+
+// --- Procesar nueva reseña ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
+    $calificacion = intval($_POST['calificacion']);
+    $comentario = trim($_POST['comentario']);
+
+    if ($calificacion >= 1 && $calificacion <= 5) {
+        $sql_reseña = "INSERT INTO reseñas (id_trabajador, id_usuario, calificacion, comentario, fecha)
+                       VALUES (?, ?, ?, ?, NOW())";
+        $stmt_reseña = $conn->prepare($sql_reseña);
+        $stmt_reseña->bind_param("iiis", $id_usuario_perfil, $id_usuario_logueado, $calificacion, $comentario);
+        $stmt_reseña->execute();
+        $stmt_reseña->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -98,14 +113,66 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
       </div>
 
       <?php if ($perfil['id_trabajador'] && $id_usuario_logueado != $id_usuario_perfil): ?>
-  <div class="mt-4 text-center">
-    <a href="mensaje.php?id=<?php echo $perfil['id_usuario']; ?>" 
-       class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-full shadow">
-      Enviar mensaje
-    </a>
-  </div>
-<?php endif; ?>
+      <!-- Botón de mensaje -->
+      <div class="mt-4 text-center">
+        <a href="mensaje.php?id=<?php echo $perfil['id_usuario']; ?>" 
+           class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-full shadow">
+          Enviar mensaje
+        </a>
+      </div>
 
+      <!-- 🟡 NUEVA SECCIÓN: Dejar reseña -->
+      <div class="mt-8 bg-yellow-50 rounded-xl p-5 border border-yellow-200 shadow-sm">
+        <h3 class="text-lg font-semibold text-yellow-700 mb-3">Dejar una valoración ⭐</h3>
+        <form method="POST" class="space-y-4">
+          <div id="estrellas" class="flex gap-2 text-3xl text-gray-300 cursor-pointer justify-center sm:justify-start"></div>
+          <input type="hidden" name="calificacion" id="calificacion" required>
+
+          <textarea name="comentario" rows="3" placeholder="Escribí una reseña (opcional)"
+            class="w-full border border-gray-300 rounded-lg p-3 resize-none focus:ring-2 focus:ring-yellow-400"></textarea>
+
+          <button type="submit"
+            class="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-5 rounded-lg shadow transition">
+            Enviar reseña
+          </button>
+        </form>
+      </div>
+
+      <!-- 🟢 Reseñas existentes -->
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Reseñas de otros usuarios</h3>
+        <div class="space-y-3">
+          <?php
+          $sql = "SELECT r.*, u.nombre AS usuario
+                  FROM reseñas r
+                  JOIN usuarios u ON r.id_usuario = u.id_usuario
+                  WHERE r.id_trabajador = ?
+                  ORDER BY r.fecha DESC";
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param("i", $id_usuario_perfil);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {
+              while ($r = $result->fetch_assoc()) {
+                  echo "<div class='bg-white border-l-4 border-yellow-400 rounded-lg p-4 shadow-sm'>";
+                  echo "<div class='flex justify-between items-center'>";
+                  echo "<span class='font-semibold text-gray-800'>" . htmlspecialchars($r['usuario']) . "</span>";
+                  echo "<span class='text-yellow-400 text-lg'>" . str_repeat('★', $r['calificacion']) . "</span>";
+                  echo "</div>";
+                  if (!empty($r['comentario'])) {
+                      echo "<p class='text-gray-700 italic mt-1'>" . htmlspecialchars($r['comentario']) . "</p>";
+                  }
+                  echo "<small class='text-gray-500 text-xs'>" . $r['fecha'] . "</small>";
+                  echo "</div>";
+              }
+          } else {
+              echo "<p class='text-gray-500 italic text-center'>Todavía no hay reseñas para este trabajador.</p>";
+          }
+          ?>
+        </div>
+      </div>
+      <?php endif; ?>
 
     <?php elseif ($id_usuario_logueado == $id_usuario_perfil): ?>
       <!-- Card para comenzar a trabajar -->
@@ -128,6 +195,25 @@ $nombre_localidad = $localidad ? $localidad['nombre_localidad'] : 'Localidad des
 
 <?php include 'footer.php'; ?>
 
+<script>
+// 🌟 Interactividad de estrellas
+const estrellasCont = document.getElementById('estrellas');
+const inputCalificacion = document.getElementById('calificacion');
+for (let i = 1; i <= 5; i++) {
+    const span = document.createElement('span');
+    span.textContent = '★';
+    span.dataset.value = i;
+    span.addEventListener('click', () => {
+        inputCalificacion.value = i;
+        document.querySelectorAll('#estrellas span').forEach((s, idx) => {
+            s.classList.toggle('text-yellow-400', idx < i);
+            s.classList.toggle('text-gray-300', idx >= i);
+            s.classList.toggle('scale-110', idx === i - 1);
+        });
+    });
+    estrellasCont.appendChild(span);
+}
+</script>
+
 </body>
 </html>
- 

@@ -4,10 +4,11 @@
   </head>
   
   <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
+    <a href="index.php">
     <div class="logo">
       <img src="img/labu.png" alt="Logo" class="h-12">
     </div>
-
+    </a>
     
 
     <div class="flex items-center gap-4">
