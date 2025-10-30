@@ -2,16 +2,19 @@
 include 'Controlador/db_connect.php';
 session_start();
 
-// Si no hay login, redirige
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: registro.php");
     exit();
 }
 
-// ID del usuario logueado
 $id_usuario_logueado = $_SESSION['id_usuario'];
 
-// Tomar el ID del perfil que se quiere ver (?id= en la URL)
+// el btn solo aparece cuando el usuario esta registrado
+<?php if (isset($_SESSION['id_usuario'])): ?>
+  <a href="registro.php" class="...">Cerrar sesión</a>
+<?php endif; ?>
+
+
 $id_usuario_perfil = isset($_GET['id']) ? intval($_GET['id']) : $id_usuario_logueado;
 
 // Traer datos del usuario

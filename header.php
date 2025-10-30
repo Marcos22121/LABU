@@ -1,17 +1,15 @@
-  <head>
-      <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-  </head>
-  
-  <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200">
-    <a href="index.php">
+<header class="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-50">
+  <a href="index.php" class="flex items-center">
     <div class="logo">
       <img src="img/labu.png" alt="Logo" class="h-12">
     </div>
     </a>
-    <?php if (isset($_SESSION['id_usuario'])): ?>
-
-<?php endif; ?>
 
     
     <div class="flex items-center gap-4">
