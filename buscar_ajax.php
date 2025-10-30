@@ -70,22 +70,46 @@ if ($result->num_rows === 0) {
           </div>";
     exit;
 }
-
-while ($row = $result->fetch_assoc()):
 ?>
-  <div class="w-full bg-white rounded-xl shadow-md p-4 flex items-start gap-4 hover:shadow-lg transition">
+
+<?php while ($row = $result->fetch_assoc()): ?>
+  <div class="w-full bg-white rounded-xl shadow-md p-4 flex flex-col sm:flex-row sm:items-start gap-4 hover:shadow-lg transition">
+    
+    <!-- Imagen -->
     <img src="<?= $row['foto_perfil'] ?: 'img/default-profile.png' ?>" 
          alt="Foto trabajador" 
-         class="w-16 h-16 rounded-full object-cover border-2 border-blue-500">
+         class="w-20 h-20 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-blue-500 flex-shrink-0">
+
+    <!-- Contenido -->
     <div class="flex-1">
-      <h3 class="text-lg font-semibold text-gray-800"><?= htmlspecialchars($row['nombre']." ".$row['apellido']) ?></h3>
+      <h3 class="text-lg font-semibold text-gray-800 leading-tight">
+        <?= htmlspecialchars($row['nombre'] . " " . $row['apellido']) ?>
+      </h3>
+
       <?php if ($row['especialidad']): ?>
-        <span class="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full mb-1"><?= htmlspecialchars($row['especialidad']) ?></span>
+        <span class="inline-block px-2 py-1 mt-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+          <?= htmlspecialchars($row['especialidad']) ?>
+        </span>
       <?php endif; ?>
-      <p class="text-sm text-gray-600 leading-snug mb-2"><?= htmlspecialchars($row['descripcion_trabajo'] ?: "Sin descripción") ?></p>
-      <p class="text-xs text-gray-500"><?= htmlspecialchars($row['nombre_localidad'] ?: "Localidad desconocida") ?></p>
-      <a href="perfil.php?id=<?= $row['id_usuario'] ?>" 
-         class="inline-block mt-2 text-sm text-blue-600 hover:underline font-medium">Ver perfil →</a>
+
+      <p class="text-sm text-gray-600 mt-2 leading-snug">
+        <?= htmlspecialchars($row['descripcion_trabajo'] ?: "Sin descripción") ?>
+      </p>
+
+      <p class="text-xs text-gray-500 mt-1">
+        <?= htmlspecialchars($row['nombre_localidad'] ?: "Localidad desconocida") ?>
+      </p>
+
+      <!-- Botones -->
+      <div class="mt-3 flex flex-wrap gap-2">
+        <a href="perfil.php?id=<?= $row['id_usuario'] ?>" 
+           class="text-sm font-medium text-blue-600 hover:underline">Ver perfil →</a>
+
+        <a href="mensaje.php?id=<?= $row['id_usuario'] ?>" 
+           class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm font-medium px-3 py-1.5 rounded-lg transition">
+          💬 Enviar mensaje
+        </a>
+      </div>
     </div>
   </div>
 <?php endwhile; ?>
