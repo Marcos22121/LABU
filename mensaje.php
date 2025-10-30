@@ -33,7 +33,7 @@ if ($conversacion) {
     $sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id_receptor);
-    $stmt->execute();
+    $stmt->execute();   
     $res = $stmt->get_result();
     $es_trabajador = $res->num_rows > 0;
     $stmt->close();
@@ -51,6 +51,18 @@ if ($conversacion) {
     $stmt->execute();
     $stmt->close();
 }
+
+// ✅ Mover el UPDATE acá, después de que $id_conversacion existe
+$update = $conn->prepare("
+    UPDATE mensajes 
+    SET leido = 1 
+    WHERE id_conversacion = ? 
+      AND id_remitente != ? 
+      AND leido = 0
+");
+$update->bind_param("ii", $id_conversacion, $id_usuario_logueado);
+$update->execute();
+$update->close();
 
 // Traer mensajes iniciales
 $stmt = $conn->prepare("SELECT * FROM mensajes WHERE id_conversacion = ? ORDER BY fecha_envio ASC");
@@ -138,7 +150,7 @@ $(document).ready(function() {
   // Primer carga → baja al final
   cargarMensajes(true);
   scrollToBottom();
-  
+
   // Actualiza cada 3s pero solo baja si estás cerca del final
   setInterval(() => {
     const nearBottom = chatContainer.scrollTop() + chatContainer.height() >= chatContainer[0].scrollHeight - 100;
