@@ -9,6 +9,13 @@
       <img src="img/labu.png" alt="Logo" class="h-12">
     </div>
     </a>
+    <?php if (isset($_SESSION['id_usuario'])): ?>
+  <a href="logout.php" 
+     class="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full shadow transition">
+     Cerrar sesión
+  </a>
+<?php endif; ?>
+
     
 
     <div class="flex items-center gap-4">

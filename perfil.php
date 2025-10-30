@@ -11,12 +11,6 @@ if (!isset($_SESSION['id_usuario'])) {
 // ID del usuario logueado
 $id_usuario_logueado = $_SESSION['id_usuario'];
 
-// el btn solo aparece cuando el usuario esta registrado
-<?php if (isset($_SESSION['id_usuario'])): ?>
-  <a href="registro.php" class="...">Cerrar sesión</a>
-<?php endif; ?>
-
-
 // Tomar el ID del perfil que se quiere ver (?id= en la URL)
 $id_usuario_perfil = isset($_GET['id']) ? intval($_GET['id']) : $id_usuario_logueado;
 
