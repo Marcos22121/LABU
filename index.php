@@ -16,7 +16,7 @@
          class="absolute inset-0 w-full h-full object-cover">
 
     <div class="absolute inset-0 bg-blue-900 bg-opacity-50"></div>
-
+    
     <div class="relative text-center text-white max-w-2xl px-6">
       <h1 class="text-3xl md:text-4xl font-bold mb-4">
         Encuentra tus mejores trabajos en nuestra app
@@ -83,9 +83,7 @@ $conn->close();
     <?php echo htmlspecialchars($esp['nombre']); ?>
   </span>
 </a>
-
     <?php endforeach; ?>
-
     <a href="alltrabajos.php" 
        class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
       <img src="img/trabajo.webp" 
@@ -96,7 +94,6 @@ $conn->close();
     </a>
   </div>
 </section>
-
 
 <section class="px-4 py-8 bg-gray-50">
   <h2 class="text-xl font-bold text-gray-800 mb-4">Trabajadores Destacados</h2>
@@ -198,7 +195,5 @@ $conn->close();
   </div>
 </section>
   <?php include 'footer.php'; ?>
-
-
 </body>
 </html>
