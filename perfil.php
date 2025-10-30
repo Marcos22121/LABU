@@ -13,7 +13,7 @@ $id_usuario_logueado = $_SESSION['id_usuario'];
 
 // el btn solo aparece cuando el usuario esta registrado
 <?php if (isset($_SESSION['id_usuario'])): ?>
-  <a href="logout.php" class="...">Cerrar sesión</a>
+  <a href="registro.php" class="...">Cerrar sesión</a>
 <?php endif; ?>
 
 
