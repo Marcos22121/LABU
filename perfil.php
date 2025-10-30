@@ -32,8 +32,6 @@ if (!$perfil) {
     die("Perfil no encontrado.");
 }
 
-
-
 // Obtener nombre de la localidad
 $sql_localidad = "SELECT nombre_localidad FROM localidades WHERE id_localidad = ?";
 $stmt_localidad = $conn->prepare($sql_localidad);
@@ -50,13 +48,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
     $calificacion = intval($_POST['calificacion']);
     $comentario = trim($_POST['comentario']);
 
-    if ($calificacion >= 1 && $calificacion <= 5) {
-        $sql_reseña = "INSERT INTO reseñas (id_trabajador, id_usuario, calificacion, comentario, fecha)
-                       VALUES (?, ?, ?, ?, NOW())";
-        $stmt_reseña = $conn->prepare($sql_reseña);
-        $stmt_reseña->bind_param("iiis", $id_usuario_perfil, $id_usuario_logueado, $calificacion, $comentario);
-        $stmt_reseña->execute();
-        $stmt_reseña->close();
+    // Evitar reseñar tu propio perfil
+    if ($id_usuario_logueado === $id_usuario_perfil) {
+        echo "<p class='text-red-500 text-center mt-2'>No podés dejarte una reseña a vos mismo.</p>";
+    } elseif ($calificacion < 1 || $calificacion > 5) {
+        echo "<p class='text-red-500 text-center mt-2'>Calificación inválida.</p>";
+    } else {
+        // Buscar el id_trabajador asociado al usuario del perfil
+        $sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_usuario_perfil);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if ($res->num_rows === 0) {
+            echo "<p class='text-red-500 text-center mt-2'>Este usuario no es un trabajador válido.</p>";
+        } else {
+            $id_trabajador = $res->fetch_assoc()['id_trabajador'];
+            $stmt->close();
+
+            // Insertar la reseña
+            $sql = "INSERT INTO reseñas (id_trabajador, id_usuario, calificacion, comentario, fecha)
+                    VALUES (?, ?, ?, ?, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("iiis", $id_trabajador, $id_usuario_logueado, $calificacion, $comentario);
+
+            if ($stmt->execute()) {
+                echo "<p class='text-green-600 text-center mt-2'>¡Gracias por tu reseña!</p>";
+            } else {
+                echo "<p class='text-red-500 text-center mt-2'>Error al guardar la reseña.</p>";
+            }
+
+            $stmt->close();
+        }
     }
 }
 ?>
@@ -83,13 +107,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
           <h2 class="text-xl font-bold text-gray-800">
             <?php echo htmlspecialchars($perfil['nombre'] . " " . $perfil['apellido']); ?>
           </h2>
-
+<div class="flex items-center gap-3">
           <?php if ($id_usuario_logueado == $id_usuario_perfil): ?>
             <a href="editar.php" 
                class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full shadow">
               Editar
             </a>
+
+              <a href="logout.php" 
+     class="bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full shadow transition">
+     Cerrar sesión
+  </a>
           <?php endif; ?>
+          </div>
+          
         </div>
 
         <p class="text-gray-600 mt-1">Vive en <?php echo htmlspecialchars($nombre_localidad); ?></p>
@@ -141,40 +172,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
       </div>
 
       <!-- 🟢 Reseñas existentes -->
-      <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Reseñas de otros usuarios</h3>
-        <div class="space-y-3">
-          <?php
-          $sql = "SELECT r.*, u.nombre AS usuario
-                  FROM reseñas r
-                  JOIN usuarios u ON r.id_usuario = u.id_usuario
-                  WHERE r.id_trabajador = ?
-                  ORDER BY r.fecha DESC";
-          $stmt = $conn->prepare($sql);
-          $stmt->bind_param("i", $id_usuario_perfil);
-          $stmt->execute();
-          $result = $stmt->get_result();
+<!-- 🟢 Reseñas existentes -->
+<div class="mt-8">
+  <h3 class="text-lg font-semibold text-gray-800 mb-4">Reseñas de otros usuarios</h3>
+  <div class="space-y-3">
+    <?php
+    // Primero obtenemos el id_trabajador asociado a este perfil
+    $sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_usuario_perfil);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $trabajador = $res->fetch_assoc();
+    $stmt->close();
 
-          if ($result->num_rows > 0) {
-              while ($r = $result->fetch_assoc()) {
-                  echo "<div class='bg-white border-l-4 border-yellow-400 rounded-lg p-4 shadow-sm'>";
-                  echo "<div class='flex justify-between items-center'>";
-                  echo "<span class='font-semibold text-gray-800'>" . htmlspecialchars($r['usuario']) . "</span>";
-                  echo "<span class='text-yellow-400 text-lg'>" . str_repeat('★', $r['calificacion']) . "</span>";
-                  echo "</div>";
-                  if (!empty($r['comentario'])) {
-                      echo "<p class='text-gray-700 italic mt-1'>" . htmlspecialchars($r['comentario']) . "</p>";
-                  }
-                  echo "<small class='text-gray-500 text-xs'>" . $r['fecha'] . "</small>";
-                  echo "</div>";
-              }
-          } else {
-              echo "<p class='text-gray-500 italic text-center'>Todavía no hay reseñas para este trabajador.</p>";
-          }
-          ?>
-        </div>
-      </div>
-      <?php endif; ?>
+    if ($trabajador) {
+        $id_trabajador = $trabajador['id_trabajador'];
+
+        // Ahora sí, traemos las reseñas del trabajador
+        $sql = "SELECT r.*, u.nombre AS usuario, u.apellido AS apellido
+                FROM reseñas r
+                JOIN usuarios u ON r.id_usuario = u.id_usuario
+                WHERE r.id_trabajador = ?
+                ORDER BY r.fecha DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_trabajador);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($r = $result->fetch_assoc()) {
+                echo "<div class='bg-white border-l-4 border-yellow-400 rounded-lg p-4 shadow-sm'>";
+                echo "<div class='flex justify-between items-center'>";
+                echo "<span class='font-semibold text-gray-800'>" . htmlspecialchars($r['usuario'] . " " . $r['apellido']) . "</span>";
+                echo "<span class='text-yellow-400 text-lg'>" . str_repeat('★', $r['calificacion']) . "</span>";
+                echo "</div>";
+                if (!empty($r['comentario'])) {
+                    echo "<p class='text-gray-700 italic mt-1'>" . htmlspecialchars($r['comentario']) . "</p>";
+                }
+                echo "<small class='text-gray-500 text-xs'>" . $r['fecha'] . "</small>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p class='text-gray-500 italic text-center'>Todavía no hay reseñas para este trabajador.</p>";
+        }
+        $stmt->close();
+    } else {
+        echo "<p class='text-gray-500 italic text-center'>Este usuario no tiene perfil de trabajador, por lo tanto no puede tener reseñas.</p>";
+    }
+    ?>
+  </div>
+</div>
+<?php endif; ?>
+
 
     <?php elseif ($id_usuario_logueado == $id_usuario_perfil): ?>
       <!-- Card para comenzar a trabajar -->

@@ -112,7 +112,7 @@ $stmt->close();
 
 <div class="bg-white shadow-md flex items-center justify-between px-4 py-2 sticky top-0 z-30">
   <!-- Flecha volver -->
-  <a href="conversaciones.php" class="text-gray-600 hover:text-blue-500 text-xl">←</a>
+  <a href="mensajes.php" class="text-gray-600 hover:text-blue-500 text-xl">←</a>
 
   <!-- Info usuario -->
   <div class="flex items-center space-x-3">
@@ -161,7 +161,7 @@ $stmt->close();
 <form id="formMensaje" enctype="multipart/form-data" 
       class="fixed bottom-[50px] left-0 w-full bg-white p-3 border-t flex gap-2 shadow-md z-[10]" style="padding-bottom:22  px;">
 
-  <input type="text" name="mensaje" placeholder="Escribí un mensaje..." required 
+  <input type="text" name="mensaje" placeholder="Escribí un mensaje..." 
          class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
   
   <input type="file" name="archivo" class="hidden" id="fileInput">
