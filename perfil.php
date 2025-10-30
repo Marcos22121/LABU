@@ -32,6 +32,8 @@ if (!$perfil) {
     die("Perfil no encontrado.");
 }
 
+
+
 // Obtener nombre de la localidad
 $sql_localidad = "SELECT nombre_localidad FROM localidades WHERE id_localidad = ?";
 $stmt_localidad = $conn->prepare($sql_localidad);

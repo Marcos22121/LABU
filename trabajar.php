@@ -9,6 +9,7 @@ include 'Controlador/db_connect.php';
   <meta charset="UTF-8">
   <title>Registro como Trabajador</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     function nextStep(step) {
       document.querySelectorAll('.step').forEach(div => div.classList.add('hidden'));
