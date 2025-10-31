@@ -34,10 +34,15 @@ include 'Controlador/db_connect.php';
       <h2 class="text-2xl sm:text-3xl font-bold text-center text-blue-600 mb-6">Registrate como Trabajador</h2>
 
       <?php if (isset($_GET['success'])): ?>
-        <p class="text-green-600 text-center mb-4">¡Registro exitoso!</p>
-      <?php elseif (isset($_GET['error'])): ?>
-        <p class="text-red-600 text-center mb-4">Error: <?= htmlspecialchars($_GET['error']) ?></p>
-      <?php endif; ?>
+  <script>
+    window.location.href = "perfil.php";
+  </script>
+<?php endif; ?>
+
+<?php if (isset($_GET['error'])): ?>
+  <p class="text-red-600 text-center mb-4">Error: <?= htmlspecialchars($_GET['error']) ?></p>
+<?php endif; ?>
+
 
       <form method="POST" action="Modelos/trabajar.php" class="space-y-6">
 
@@ -134,6 +139,7 @@ include 'Controlador/db_connect.php';
       </form>
     </div>
   </main>
+<?php include 'footer.php'; ?>
 
 </body>
 </html>
