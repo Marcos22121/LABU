@@ -12,7 +12,7 @@ $id_usuario_perfil = isset($_GET['id']) ? intval($_GET['id']) : $id_usuario_logu
 
 // Traer datos del usuario
 $sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.bio, u.id_localidad, u.foto_perfil, 
-               t.id_trabajador, e.nombre AS especialidad, t.descripcion_trabajo
+               t.id_trabajador, e.nombre AS especialidad, t.descripcion_trabajo, t.puntaje_promedio
         FROM usuarios u
         LEFT JOIN trabajadores t ON u.id_usuario = t.id_usuario
         LEFT JOIN especialidades e ON t.id_especialidad = e.id_especialidad
@@ -40,9 +40,42 @@ $stmt->close();
 $nombre_localidad = $loc ? $loc['nombre_localidad'] : 'Localidad desconocida';
 
 $mensaje_feedback = "";
+$mostrar_form_reseña = false;
+$ya_tiene_reseña = false;
+$mostrar_mensaje_no_reseña = false;
+
+// Si es trabajador, verificamos si el usuario logueado tuvo conversación y si está completada
+if ($perfil['id_trabajador'] && $id_usuario_logueado != $id_usuario_perfil) {
+    $sql = "SELECT c.trabajo_completado
+            FROM conversaciones c
+            JOIN participantes_conversacion p1 ON c.id_conversacion = p1.id_conversacion AND p1.id_usuario = ?
+            JOIN participantes_conversacion p2 ON c.id_conversacion = p2.id_conversacion AND p2.id_usuario = ?
+            LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $id_usuario_logueado, $id_usuario_perfil);
+    $stmt->execute();
+    $conv = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if ($conv && $conv['trabajo_completado'] == 1) {
+        $mostrar_form_reseña = true;
+
+        // Verificamos si ya dejó una reseña antes
+        $sql = "SELECT id_review FROM reseñas WHERE id_trabajador = ? AND id_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $perfil['id_trabajador'], $id_usuario_logueado);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if ($res->num_rows > 0) $ya_tiene_reseña = true;
+        $stmt->close();
+
+    } else {
+        $mostrar_mensaje_no_reseña = true;
+    }
+}
 
 // --- Procesar nueva reseña ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion']) && $mostrar_form_reseña) {
     $calificacion = intval($_POST['calificacion']);
     $comentario = trim($_POST['comentario']);
 
@@ -51,61 +84,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
     } elseif ($calificacion < 1 || $calificacion > 5) {
         $mensaje_feedback = "<p class='text-red-500 text-center mt-2'>Calificación inválida.</p>";
     } else {
-        // Buscar id_trabajador del perfil
-        $sql = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ?";
+        // Verificar si ya existe reseña
+        $sql = "SELECT id_review FROM reseñas WHERE id_trabajador = ? AND id_usuario = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id_usuario_perfil);
+        $stmt->bind_param("ii", $perfil['id_trabajador'], $id_usuario_logueado);
         $stmt->execute();
         $res = $stmt->get_result();
 
-        if ($res->num_rows === 0) {
-            $mensaje_feedback = "<p class='text-red-500 text-center mt-2'>Este usuario no es un trabajador válido.</p>";
-        } else {
-            $id_trabajador = $res->fetch_assoc()['id_trabajador'];
-            $stmt->close();
-
-            // Verificar conversación y trabajo completado
-            $sql = "SELECT c.trabajo_completado
-                    FROM conversaciones c
-                    JOIN participantes_conversacion p1 ON c.id_conversacion = p1.id_conversacion AND p1.id_usuario = ?
-                    JOIN participantes_conversacion p2 ON c.id_conversacion = p2.id_conversacion AND p2.id_usuario = ?
-                    LIMIT 1";
+        if ($res->num_rows > 0) {
+            $sql = "UPDATE reseñas SET calificacion = ?, comentario = ?, fecha = NOW() 
+                    WHERE id_trabajador = ? AND id_usuario = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ii", $id_usuario_logueado, $id_usuario_perfil);
+            $stmt->bind_param("isii", $calificacion, $comentario, $perfil['id_trabajador'], $id_usuario_logueado);
             $stmt->execute();
-            $conv = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-
-            if (!$conv) {
-                $mensaje_feedback = "<p class='text-red-500 text-center mt-2'>No podés dejar una reseña sin haber tenido una conversación con este trabajador.</p>";
-            } elseif ($conv['trabajo_completado'] != 1) {
-                $mensaje_feedback = "<p class='text-yellow-600 text-center mt-2'>El trabajador todavía no marcó este trabajo como completado.</p>";
-            } else {
-                // Verificar si ya existe reseña
-                $sql = "SELECT id_review FROM reseñas WHERE id_trabajador = ? AND id_usuario = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ii", $id_trabajador, $id_usuario_logueado);
-                $stmt->execute();
-                $res = $stmt->get_result();
-
-                if ($res->num_rows > 0) {
-                    $sql = "UPDATE reseñas SET calificacion = ?, comentario = ?, fecha = NOW() 
-                            WHERE id_trabajador = ? AND id_usuario = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("isii", $calificacion, $comentario, $id_trabajador, $id_usuario_logueado);
-                    $stmt->execute();
-                    $mensaje_feedback = "<p class='text-green-600 text-center mt-2'>Tu reseña fue actualizada correctamente.</p>";
-                } else {
-                    $sql = "INSERT INTO reseñas (id_trabajador, id_usuario, calificacion, comentario, fecha)
-                            VALUES (?, ?, ?, ?, NOW())";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("iiis", $id_trabajador, $id_usuario_logueado, $calificacion, $comentario);
-                    $stmt->execute();
-                    $mensaje_feedback = "<p class='text-green-600 text-center mt-2'>¡Gracias por tu reseña!</p>";
-                }
-                $stmt->close();
-            }
+            $mensaje_feedback = "<p class='text-green-600 text-center mt-2'>Tu reseña fue actualizada correctamente.</p>";
+        } else {
+            $sql = "INSERT INTO reseñas (id_trabajador, id_usuario, calificacion, comentario, fecha)
+                    VALUES (?, ?, ?, ?, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("iiis", $perfil['id_trabajador'], $id_usuario_logueado, $calificacion, $comentario);
+            $stmt->execute();
+            $mensaje_feedback = "<p class='text-green-600 text-center mt-2'>¡Gracias por tu reseña!</p>";
         }
+        $stmt->close();
+
+        // 🔹 Recalcular promedio y actualizar tabla trabajadores
+        $sql = "SELECT AVG(calificacion) AS promedio FROM reseñas WHERE id_trabajador = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $perfil['id_trabajador']);
+        $stmt->execute();
+        $promedio = $stmt->get_result()->fetch_assoc()['promedio'];
+        $stmt->close();
+
+        $sql = "UPDATE trabajadores SET puntaje_promedio = ? WHERE id_trabajador = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("di", $promedio, $perfil['id_trabajador']);
+        $stmt->execute();
+        $stmt->close();
     }
 }
 ?>
@@ -122,7 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
 <?php include 'header.php'; ?>
 
 <section class="px-6 py-6 max-w-2xl mx-auto">
-
   <div class="bg-white rounded-xl shadow-md p-6 mb-6">
     <div class="flex items-start gap-4">
       <img src="<?php echo $perfil['foto_perfil'] ?: 'img/default-profile.png'; ?>" alt="Foto perfil"
@@ -134,6 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
         <p class="text-gray-600 mt-1">Vive en <?php echo htmlspecialchars($nombre_localidad); ?></p>
         <?php if ($perfil['bio']): ?>
           <p class="text-sm text-gray-700 mt-3"><?php echo nl2br(htmlspecialchars($perfil['bio'])); ?></p>
+        <?php endif; ?>
+        <?php if ($perfil['puntaje_promedio']): ?>
+          <p class="mt-2 text-yellow-600 font-medium">⭐ Promedio: <?php echo number_format($perfil['puntaje_promedio'], 1); ?>/5</p>
         <?php endif; ?>
       </div>
     </div>
@@ -161,25 +178,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
           </a>
         </div>
 
-        <!-- Sección reseñas -->
+        <!-- 🟡 Reseñas -->
         <div class="mt-8 bg-yellow-50 rounded-xl p-5 border border-yellow-200 shadow-sm">
-          <h3 class="text-lg font-semibold text-yellow-700 mb-3">Dejar una valoración ⭐</h3>
+          <h3 class="text-lg font-semibold text-yellow-700 mb-3">Valoraciones ⭐</h3>
+          
           <?php echo $mensaje_feedback; ?>
-          <form method="POST" class="space-y-4">
-            <div id="estrellas" class="flex gap-2 text-3xl text-gray-300 cursor-pointer justify-center sm:justify-start"></div>
-            <input type="hidden" name="calificacion" id="calificacion" required>
 
-            <textarea name="comentario" rows="3" placeholder="Escribí una reseña (opcional)"
-              class="w-full border border-gray-300 rounded-lg p-3 resize-none focus:ring-2 focus:ring-yellow-400"></textarea>
+          <?php if ($mostrar_form_reseña): ?>
+            <?php if ($ya_tiene_reseña): ?>
+              <p class="text-sm text-gray-600 italic mb-2 text-center">Ya dejaste una reseña. Si enviás otra, reemplazará la anterior.</p>
+            <?php endif; ?>
+            <form method="POST" class="space-y-4">
+              <div id="estrellas" class="flex gap-2 text-3xl text-gray-300 cursor-pointer justify-center sm:justify-start"></div>
+              <input type="hidden" name="calificacion" id="calificacion" required>
 
-            <button type="submit"
-              class="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-5 rounded-lg shadow transition">
-              Enviar reseña
-            </button>
-          </form>
+              <textarea name="comentario" rows="3" placeholder="Escribí una reseña (opcional)"
+                class="w-full border border-gray-300 rounded-lg p-3 resize-none focus:ring-2 focus:ring-yellow-400"></textarea>
+
+              <button type="submit"
+                class="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-5 rounded-lg shadow transition">
+                Enviar reseña
+              </button>
+            </form>
+          <?php elseif ($mostrar_mensaje_no_reseña): ?>
+            <p class="text-gray-600 italic text-center">Necesitás completar un trabajo con este trabajador para poder escribir una reseña.</p>
+          <?php endif; ?>
         </div>
 
-        <!-- Reseñas existentes -->
+        <!-- 🟢 Reseñas existentes -->
         <div class="mt-8">
           <h3 class="text-lg font-semibold text-gray-800 mb-4">Reseñas de otros usuarios</h3>
           <div class="space-y-3">
@@ -234,19 +260,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion'])) {
 <script>
 const estrellasCont = document.getElementById('estrellas');
 const inputCalificacion = document.getElementById('calificacion');
-for (let i = 1; i <= 5; i++) {
-  const s = document.createElement('span');
-  s.textContent = '★';
-  s.dataset.value = i;
-  s.addEventListener('click', () => {
-    inputCalificacion.value = i;
-    document.querySelectorAll('#estrellas span').forEach((x, idx) => {
-      x.classList.toggle('text-yellow-400', idx < i);
-      x.classList.toggle('text-gray-300', idx >= i);
-      x.classList.toggle('scale-110', idx === i - 1);
+if (estrellasCont) {
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement('span');
+    s.textContent = '★';
+    s.dataset.value = i;
+    s.addEventListener('click', () => {
+      inputCalificacion.value = i;
+      document.querySelectorAll('#estrellas span').forEach((x, idx) => {
+        x.classList.toggle('text-yellow-400', idx < i);
+        x.classList.toggle('text-gray-300', idx >= i);
+        x.classList.toggle('scale-110', idx === i - 1);
+      });
     });
-  });
-  estrellasCont.appendChild(s);
+    estrellasCont.appendChild(s);
+  }
 }
 </script>
 
