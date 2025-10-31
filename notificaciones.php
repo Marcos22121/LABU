@@ -3,16 +3,31 @@ require_once 'Controlador/db_connect.php';
 session_start();
 
 if (!isset($_SESSION['id_usuario'])) {
-  $_SESSION['id_usuario'] = 5; // ⚠️ Solo para pruebas locales (eliminar en producción)
+  $_SESSION['id_usuario'] = 5; // ⚠️ Solo para pruebas locales (quitar en producción)
 }
 
 $id_usuario = $_SESSION['id_usuario'];
+
+// 🔍 Buscar si el usuario logueado es un trabajador
+$sqlTrabajador = "SELECT id_trabajador FROM trabajadores WHERE id_usuario = ? LIMIT 1";
+$stmtTrab = $conn->prepare($sqlTrabajador);
+$stmtTrab->bind_param("i", $id_usuario);
+$stmtTrab->execute();
+$resultTrab = $stmtTrab->get_result();
+$id_trabajador = null;
+
+if ($row = $resultTrab->fetch_assoc()) {
+  $id_trabajador = $row['id_trabajador'];
+}
 
 // 🔁 Si viene por AJAX → devolver JSON
 if (isset($_GET['ajax'])) {
   header('Content-Type: application/json');
 
-  $sql = "
+  $notificaciones = [];
+
+  /** 🔹 1. Notificaciones de MENSAJES no leídos **/
+  $sqlMensajes = "
       SELECT 
           m.id_mensaje,
           m.id_remitente,
@@ -31,32 +46,66 @@ if (isset($_GET['ajax'])) {
       ORDER BY m.fecha_envio DESC
   ";
 
-  $stmt = $conn->prepare($sql);
+  $stmt = $conn->prepare($sqlMensajes);
   $stmt->bind_param("ii", $id_usuario, $id_usuario);
   $stmt->execute();
-  $result = $stmt->get_result();
+  $resultMensajes = $stmt->get_result();
 
-  $mensajes = [];
-  while ($row = $result->fetch_assoc()) {
-      $mensajes[] = [
-          'id_mensaje' => $row['id_mensaje'],
-          'remitente' => $row['nombre'] . ' ' . $row['apellido'],
-          'foto_perfil' => $row['foto_perfil'] ? $row['foto_perfil'] : 'img/default.png',
-          'contenido' => $row['contenido'],
-          'fecha' => $row['fecha_envio']
+  while ($row = $resultMensajes->fetch_assoc()) {
+    $notificaciones[] = [
+      'tipo' => 'mensaje',
+      'id' => $row['id_mensaje'],
+      'remitente' => $row['nombre'] . ' ' . $row['apellido'],
+      'foto' => $row['foto_perfil'] ?: 'img/default.png',
+      'contenido' => $row['contenido'],
+      'fecha' => $row['fecha_envio']
+    ];
+  }
+
+  // ✅ no marcamos como leídos automáticamente
+
+
+  /** 🔹 2. Notificaciones de RESEÑAS nuevas (solo si el usuario es trabajador) **/
+  if ($id_trabajador !== null) {
+    $sqlReseñas = "
+        SELECT 
+            r.id_review,
+            r.calificacion,
+            r.comentario,
+            r.fecha,
+            r.id_usuario,
+            u.nombre,
+            u.apellido,
+            u.foto_perfil
+        FROM reseñas r
+        INNER JOIN usuarios u ON u.id_usuario = r.id_usuario
+        WHERE r.id_trabajador = ? AND r.recibida = 0
+        ORDER BY r.fecha DESC
+    ";
+
+    $stmt2 = $conn->prepare($sqlReseñas);
+    $stmt2->bind_param("i", $id_trabajador);
+    $stmt2->execute();
+    $resultReseñas = $stmt2->get_result();
+
+    while ($row = $resultReseñas->fetch_assoc()) {
+      $notificaciones[] = [
+        'tipo' => 'reseña',
+        'id' => $row['id_review'],
+        'remitente' => $row['nombre'] . ' ' . $row['apellido'],
+        'foto' => $row['foto_perfil'] ?: 'img/default.png',
+        'contenido' => $row['comentario'] ?: '(Sin comentario)',
+        'calificacion' => $row['calificacion'],
+        'fecha' => $row['fecha']
       ];
+    }
   }
 
-  if (!empty($mensajes)) {
-      $ids = array_column($mensajes, 'id_mensaje');
-      $ids_str = implode(',', $ids);
-      $conn->query("UPDATE mensajes SET leido = 1 WHERE id_mensaje IN ($ids_str)");
-  }
-
-  echo json_encode($mensajes);
+  echo json_encode($notificaciones);
   exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -66,14 +115,11 @@ if (isset($_GET['ajax'])) {
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    /* Animación sutil de entrada */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .fade-in {
-      animation: fadeIn 0.4s ease-out;
-    }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
   </style>
 </head>
 <body class="bg-gradient-to-b from-gray-50 to-white min-h-screen flex flex-col">
@@ -106,23 +152,29 @@ if (isset($_GET['ajax'])) {
       });
     }
 
-    function mostrarNotificacion(nombre, mensaje, foto) {
+    function mostrarNotificacion(titulo, cuerpo, icono) {
       if (Notification.permission === "granted") {
-        new Notification(nombre, { body: mensaje, icon: foto });
+        const n = new Notification(titulo, { body: cuerpo, icon: icono });
+        n.onclick = () => window.focus();
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission();
       }
     }
 
+    function generarEstrellas(num) {
+      return '★'.repeat(num) + '☆'.repeat(5 - num);
+    }
+
     async function cargarNotificaciones() {
       try {
         const response = await fetch("notificaciones.php?ajax=1");
-        const mensajes = await response.json();
+        const data = await response.json();
 
-        if (mensajes.length > 0) {
+        contenedor.innerHTML = "";
+        if (data.length > 0) {
           noNotif.style.display = "none";
 
-          mensajes.forEach(m => {
+          data.forEach(n => {
             const card = document.createElement("div");
             card.className = `
               flex flex-col sm:flex-row items-start sm:items-center
@@ -130,24 +182,52 @@ if (isset($_GET['ajax'])) {
               hover:shadow-md transition duration-200 fade-in
             `;
 
-            card.innerHTML = `
-              <img src="${m.foto_perfil}" 
-                   alt="Foto de perfil"
-                   class="w-14 h-14 rounded-full object-cover border-2 border-blue-500 sm:mr-4 mb-3 sm:mb-0">
-              <div class="flex-1 w-full">
-                <h2 class="text-base sm:text-lg font-semibold text-gray-800 mb-1">
-                  Nuevo mensaje de ${m.remitente}
-                </h2>
-                <p class="text-sm sm:text-base text-gray-600 leading-snug line-clamp-2">
-                  ${m.contenido}
-                </p>
-                <p class="text-xs text-gray-400 mt-2">${formatearFecha(m.fecha)}</p>
-              </div>
-            `;
+            if (n.tipo === 'mensaje') {
+              card.innerHTML = `
+                <img src="${n.foto}" 
+                     alt="Foto de perfil"
+                     class="w-14 h-14 rounded-full object-cover border-2 border-blue-500 sm:mr-4 mb-3 sm:mb-0">
+                <div class="flex-1 w-full">
+                  <h2 class="text-base sm:text-lg font-semibold text-gray-800 mb-1">
+                    Nuevo mensaje de ${n.remitente}
+                  </h2>
+                  <p class="text-sm sm:text-base text-gray-600 leading-snug line-clamp-2">
+                    ${n.contenido}
+                  </p>
+                  <p class="text-xs text-gray-400 mt-2">${formatearFecha(n.fecha)}</p>
+                </div>
+              `;
+              mostrarNotificacion("Nuevo mensaje de " + n.remitente, n.contenido, n.foto);
+
+            } else if (n.tipo === 'reseña') {
+              card.innerHTML = `
+                <div class="flex items-center gap-3 mb-3 sm:mb-0">
+                  <div class="flex items-center justify-center w-14 h-14 rounded-full bg-yellow-100 border border-yellow-400">
+                    ⭐
+                  </div>
+                  <div>
+                    <h2 class="text-base sm:text-lg font-semibold text-gray-800 mb-1">
+                      Te han escrito una reseña
+                    </h2>
+                    <p class="text-yellow-500 font-semibold text-sm">
+                      ${generarEstrellas(n.calificacion)}
+                    </p>
+                  </div>
+                </div>
+                <div class="flex-1 w-full mt-2 sm:mt-0">
+                  <p class="text-sm sm:text-base text-gray-700 leading-snug italic">
+                    “${n.contenido}”
+                  </p>
+                  <p class="text-xs text-gray-400 mt-2">${formatearFecha(n.fecha)}</p>
+                </div>
+              `;
+              mostrarNotificacion("Te han escrito una reseña", n.contenido, "img/star.png");
+            }
 
             contenedor.prepend(card);
-            mostrarNotificacion(m.remitente, m.contenido, m.foto_perfil);
           });
+        } else {
+          noNotif.style.display = "block";
         }
       } catch (error) {
         console.error("Error al cargar notificaciones:", error);
@@ -160,14 +240,6 @@ if (isset($_GET['ajax'])) {
 
     setInterval(cargarNotificaciones, 5000);
   });
-
-  new Notification(nombre, {
-  body: mensaje,
-  icon: foto
-}).onclick = function () {
-  window.open("chat.php?usuario=" + encodeURIComponent(nombre), "_blank");
-};
-
   </script>
 </body>
 </html>
