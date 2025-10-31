@@ -29,5 +29,5 @@ if ($es_participante_trabajador) {
     $stmt->close();
 }
 
-header("Location: mensajes.php);
+header("Location: mensajes.php");
 exit();
