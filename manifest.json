@@ -1,0 +1,22 @@
+{
+  "name": "Labu",
+  "short_name": "Labu",
+  "description": "Conectá con trabajadores y profesionales de confianza",
+  "start_url": "index.php",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/img/icons/icon.jpg",
+      "sizes": "400x400",
+      "type": "image/jpg"
+    },
+    {
+      "src": "/img/icons/icon.jpg",
+      "sizes": "400x400",
+      "type": "image/jpg"
+    }
+  ]
+}
