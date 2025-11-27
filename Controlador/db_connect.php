@@ -1,9 +1,9 @@
 <?php
 // Configuración de la base de datos (AlwaysData)
-$host = "mysql-labu.alwaysdata.net"; // Servidor remoto
-$usuario = "labu";                   // Tu usuario de AlwaysData
-$contrasena = "bolas123!";  // Cambiá esto por tu contraseña real
-$bd = "labu_bd";                     // El nombre de tu base de datos en AlwaysData
+$host = "localhost"; // Servidor remoto
+$usuario = "igxdev1896_labu";                   // Tu usuario de AlwaysData
+$contrasena = "besN7d5bdNesv4SyX7fS";  // Cambiá esto por tu contraseña real
+$bd = "igxdev1896_labu";                     // El nombre de tu base de datos en AlwaysData
 
 // Crear conexión usando MySQLi
 $conn = new mysqli($host, $usuario, $contrasena, $bd, 3306);

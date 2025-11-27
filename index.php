@@ -75,7 +75,7 @@ $conn->close();
     <?php foreach ($especialidades as $esp): ?>
       <a href="buscar.php?especialidad=<?= urlencode($esp['nombre']) ?>" 
    class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md group">
-  <img src="<?php echo $esp['foto_url'] ? htmlspecialchars($esp['foto_url']) : 'img/trabajo.webp'; ?>" 
+  <img src="<?php echo $esp['foto_url'] ? htmlspecialchars($esp['foto_url']) : 'Img/trabajo.webp'; ?>" 
        alt="<?php echo htmlspecialchars($esp['nombre']); ?>" 
        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-300">
   <div class="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-50 transition"></div>
@@ -86,7 +86,7 @@ $conn->close();
     <?php endforeach; ?>
     <a href="alltrabajos.php" 
        class="relative flex items-center justify-center h-28 rounded-lg overflow-hidden shadow-md hover:brightness-110 transition">
-      <img src="img/trabajo.webp" 
+      <img src="Img/trabajo.webp" 
            alt="Trabajos" 
            class="absolute inset-0 w-full h-full object-cover">
       <div class="absolute inset-0 bg-blue-600 bg-opacity-30"></div>

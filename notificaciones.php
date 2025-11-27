@@ -56,7 +56,7 @@ if (isset($_GET['ajax'])) {
       'tipo' => 'mensaje',
       'id' => $row['id_mensaje'],
       'remitente' => $row['nombre'] . ' ' . $row['apellido'],
-      'foto' => $row['foto_perfil'] ?: 'img/default.png',
+      'foto' => $row['foto_perfil'] ?: 'Img/default.png',
       'contenido' => $row['contenido'],
       'fecha' => $row['fecha_envio']
     ];
@@ -93,7 +93,7 @@ if (isset($_GET['ajax'])) {
         'tipo' => 'reseña',
         'id' => $row['id_review'],
         'remitente' => $row['nombre'] . ' ' . $row['apellido'],
-        'foto' => $row['foto_perfil'] ?: 'img/default.png',
+        'foto' => $row['foto_perfil'] ?: 'Img/default.png',
         'contenido' => $row['comentario'] ?: '(Sin comentario)',
         'calificacion' => $row['calificacion'],
         'fecha' => $row['fecha']
@@ -221,7 +221,7 @@ if (isset($_GET['ajax'])) {
                   <p class="text-xs text-gray-400 mt-2">${formatearFecha(n.fecha)}</p>
                 </div>
               `;
-              mostrarNotificacion("Te han escrito una reseña", n.contenido, "img/star.png");
+              mostrarNotificacion("Te han escrito una reseña", n.contenido, "Img/star.png");
             }
 
             contenedor.prepend(card);

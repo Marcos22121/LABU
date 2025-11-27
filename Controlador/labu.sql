@@ -53,22 +53,22 @@ CREATE TABLE `especialidades` (
 --
 
 INSERT INTO `especialidades` (`id_especialidad`, `nombre`, `descripcion`, `foto_url`, `activo`, `fecha_creacion`) VALUES
-(1, 'Electricista', 'Trabajos de electricidad en el hogar, comercios o industrias', 'img/especialidades/electricista.webp', 1, '2025-09-12 18:00:29'),
-(2, 'Plomero', 'Reparación e instalación de cañerías, sanitarios y gas', 'img/especialidades/plomero.jpg', 1, '2025-09-12 18:00:29'),
-(3, 'Carpintero', 'Fabricación y reparación de muebles y estructuras de madera', 'img/especialidades/carpintero.webp', 1, '2025-09-12 18:00:29'),
-(20, 'Pintor', 'Pintura de interiores y exteriores, restauración de superficies', 'img/especialidades/pintor.jpg', 1, '2025-09-12 18:28:42'),
-(21, 'Jardinero', 'Diseño, mantenimiento y cuidado de jardines y áreas verdes', 'img/especialidades/jardinero.webp', 1, '2025-09-12 18:28:42'),
-(22, 'Albañil', 'Construcción, reformas y trabajos en mampostería y cemento', 'img/especialidades/albanil.jpg', 1, '2025-09-12 18:28:42'),
-(23, 'Cerrajero', 'Apertura de cerraduras, cambio de llaves y sistemas de seguridad', 'img/especialidades/cerrajero.jpg', 1, '2025-09-12 18:28:42'),
-(24, 'Gasista', 'Instalación y reparación de sistemas de gas y calefacción', 'img/especialidades/gasista.jpg', 1, '2025-09-12 18:28:42'),
-(25, 'Herrero', 'Fabricación y reparación de estructuras metálicas, rejas, portones', 'img/especialidades/herrero.webp', 1, '2025-09-12 18:28:42'),
-(26, 'Mecánico', 'Reparación y mantenimiento de vehículos automotores', 'img/especialidades/mecanico.webp', 1, '2025-09-12 18:28:42'),
-(27, 'Tecnico de PC', 'Reparación y mantenimiento de computadoras y notebooks', 'img/especialidades/tecnico_pc.jpg', 1, '2025-09-12 18:28:42'),
-(28, 'Tecnico de Celulares', 'Reparación de smartphones, tablets y dispositivos móviles', 'img/especialidades/tecnico_celulares.jpg', 1, '2025-09-12 18:28:42'),
-(29, 'Mudanzas', 'Transporte de muebles y pertenencias de un lugar a otro', 'img/especialidades/mudanzas.jpg', 1, '2025-09-12 18:28:42'),
-(30, 'Niñera', 'Cuidado de niños, asistencia y acompañamiento infantil', 'img/especialidades/ninera.jpg', 1, '2025-09-12 18:28:42'),
-(31, 'Cuidado de Adultos Mayores', 'Asistencia y acompañamiento de personas mayores', 'img/especialidades/adultos_mayores.png', 1, '2025-09-12 18:28:42'),
-(32, 'Limpieza', 'Servicios de limpieza de hogares, oficinas y locales', 'img/especialidades/limpieza.jpg', 1, '2025-09-12 18:28:42');
+(1, 'Electricista', 'Trabajos de electricidad en el hogar, comercios o industrias', 'Img/especialidades/electricista.webp', 1, '2025-09-12 18:00:29'),
+(2, 'Plomero', 'Reparación e instalación de cañerías, sanitarios y gas', 'Img/especialidades/plomero.jpg', 1, '2025-09-12 18:00:29'),
+(3, 'Carpintero', 'Fabricación y reparación de muebles y estructuras de madera', 'Img/especialidades/carpintero.webp', 1, '2025-09-12 18:00:29'),
+(20, 'Pintor', 'Pintura de interiores y exteriores, restauración de superficies', 'Img/especialidades/pintor.jpg', 1, '2025-09-12 18:28:42'),
+(21, 'Jardinero', 'Diseño, mantenimiento y cuidado de jardines y áreas verdes', 'Img/especialidades/jardinero.webp', 1, '2025-09-12 18:28:42'),
+(22, 'Albañil', 'Construcción, reformas y trabajos en mampostería y cemento', 'Img/especialidades/albanil.jpg', 1, '2025-09-12 18:28:42'),
+(23, 'Cerrajero', 'Apertura de cerraduras, cambio de llaves y sistemas de seguridad', 'Img/especialidades/cerrajero.jpg', 1, '2025-09-12 18:28:42'),
+(24, 'Gasista', 'Instalación y reparación de sistemas de gas y calefacción', 'Img/especialidades/gasista.jpg', 1, '2025-09-12 18:28:42'),
+(25, 'Herrero', 'Fabricación y reparación de estructuras metálicas, rejas, portones', 'Img/especialidades/herrero.webp', 1, '2025-09-12 18:28:42'),
+(26, 'Mecánico', 'Reparación y mantenimiento de vehículos automotores', 'Img/especialidades/mecanico.webp', 1, '2025-09-12 18:28:42'),
+(27, 'Tecnico de PC', 'Reparación y mantenimiento de computadoras y notebooks', 'Img/especialidades/tecnico_pc.jpg', 1, '2025-09-12 18:28:42'),
+(28, 'Tecnico de Celulares', 'Reparación de smartphones, tablets y dispositivos móviles', 'Img/especialidades/tecnico_celulares.jpg', 1, '2025-09-12 18:28:42'),
+(29, 'Mudanzas', 'Transporte de muebles y pertenencias de un lugar a otro', 'Img/especialidades/mudanzas.jpg', 1, '2025-09-12 18:28:42'),
+(30, 'Niñera', 'Cuidado de niños, asistencia y acompañamiento infantil', 'Img/especialidades/ninera.jpg', 1, '2025-09-12 18:28:42'),
+(31, 'Cuidado de Adultos Mayores', 'Asistencia y acompañamiento de personas mayores', 'Img/especialidades/adultos_mayores.png', 1, '2025-09-12 18:28:42'),
+(32, 'Limpieza', 'Servicios de limpieza de hogares, oficinas y locales', 'Img/especialidades/limpieza.jpg', 1, '2025-09-12 18:28:42');
 
 -- --------------------------------------------------------
 

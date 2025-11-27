@@ -76,7 +76,7 @@ if ($result->num_rows === 0) {
   <div class="w-full bg-white rounded-xl shadow-md p-4 flex flex-col sm:flex-row sm:items-start gap-4 hover:shadow-lg transition">
     
     <!-- Imagen -->
-    <img src="<?= $row['foto_perfil'] ?: 'img/default-profile.png' ?>" 
+    <img src="<?= $row['foto_perfil'] ?: 'Img/default-profile.png' ?>" 
          alt="Foto trabajador" 
          class="w-20 h-20 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-blue-500 flex-shrink-0">
 

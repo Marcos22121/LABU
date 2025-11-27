@@ -116,7 +116,7 @@ $stmt->close();
 
   <!-- Info usuario -->
   <div class="flex items-center space-x-3">
-    <img src="<?php echo htmlspecialchars($receptor['foto_perfil'] ?? 'img/default.jpg'); ?>" 
+    <img src="<?php echo htmlspecialchars($receptor['foto_perfil'] ?? 'Img/default.jpg'); ?>" 
          alt="Foto de perfil" class="w-10 h-10 rounded-full object-cover">
     <span class="font-semibold text-gray-800 text-sm sm:text-base">
       <?php echo htmlspecialchars($receptor['nombre']); ?>

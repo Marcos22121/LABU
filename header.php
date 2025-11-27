@@ -7,7 +7,7 @@
 <header class="flex justify-between items-center px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-50">
   <a href="index.php" class="flex items-center">
     <div class="logo">
-      <img src="img/labu.png" alt="Logo" class="h-12">
+      <img src="Img/labu.png" alt="Logo" class="h-12">
     </div>
     </a>
 
@@ -29,7 +29,7 @@
      <a href="mensajes.php" 
    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100" 
    title="Mensajes">
-  <img src="img/chat.png" alt="Mensajes" class="w-6 h-6 object-contain">
+  <img src="Img/chat.png" alt="Mensajes" class="w-6 h-6 object-contain">
 </a>
     </div>
   </header>

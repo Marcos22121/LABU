@@ -47,7 +47,7 @@ $convs = $stmt->get_result();
   <?php while ($c = $convs->fetch_assoc()): ?>
     <a href="mensaje.php?id=<?php echo $c['otro_id']; ?>" class="block bg-white p-4 rounded-lg shadow-sm mb-3 hover:bg-gray-50">
       <div class="flex items-center gap-3">
-        <img src="<?php echo $c['foto_perfil'] ?: 'img/default-profile.png'; ?>" 
+        <img src="<?php echo $c['foto_perfil'] ?: 'Img/default-profile.png'; ?>" 
              class="w-12 h-12 rounded-full object-cover">
         <div class="flex-1">
           <h3 class="text-sm font-semibold text-gray-800">

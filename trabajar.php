@@ -57,7 +57,7 @@ include 'Controlador/db_connect.php';
               <label for="esp-<?php echo $esp['id_especialidad']; ?>" 
                      class="relative flex items-center justify-center h-24 sm:h-28 rounded-lg overflow-hidden shadow-md group cursor-pointer transition-transform transform hover:scale-105">
                 <input type="radio" name="id_especialidad" id="esp-<?php echo $esp['id_especialidad']; ?>" value="<?php echo $esp['id_especialidad']; ?>" class="hidden peer" required>
-                <img src="<?php echo $esp['foto_url'] ?: 'img/trabajo.webp'; ?>" 
+                <img src="<?php echo $esp['foto_url'] ?: 'Img/trabajo.webp'; ?>" 
                      alt="<?php echo htmlspecialchars($esp['nombre']); ?>" 
                      class="absolute inset-0 w-full h-full object-cover peer-checked:brightness-75">
                 <div class="absolute inset-0 bg-black bg-opacity-40"></div>

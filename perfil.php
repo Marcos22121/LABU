@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calificacion']) && $m
 <section class="px-6 py-6 max-w-2xl mx-auto">
   <div class="bg-white rounded-xl shadow-md p-6 mb-6">
     <div class="flex items-start gap-4">
-      <img src="<?php echo $perfil['foto_perfil'] ?: 'img/default-profile.png'; ?>" alt="Foto perfil"
+      <img src="<?php echo $perfil['foto_perfil'] ?: 'Img/default-profile.png'; ?>" alt="Foto perfil"
            class="w-20 h-20 rounded-full object-cover shadow-sm">
       <div class="flex-1">
         <h2 class="text-xl font-bold text-gray-800">
